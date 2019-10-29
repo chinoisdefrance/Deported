@@ -17,6 +17,8 @@ using namespace std;
 
 int main()
 {
+
+	Carte carte;
 	const int CaseTaille = 100;
 
 	int briquesCount = 0;
@@ -83,32 +85,19 @@ int main()
 
 	//ELEMENTS CARTE (DECOR)//
 
-	//frontiere//
-
-	vector<string> frontiere = {
-
-		"ffffffff",
-		"f______f",
-		"f______f",
-		"f______f",
-		"f______f",
-		"f______f",
-		"f______f",
-		"f______f",
-		"ffffffff",
-	};
 
 
-	//affichage de frontiere dans la console//
-	for (size_t i = 0; i < frontiere.size(); i++)
-	{
-		string slt = frontiere[i];
-		for (size_t t = 0; t < frontiere[0].size(); t++)
-		{
-			cout << slt[t];
-		}
-		cout << endl;
-	}
+
+	//affichage de carte.frontiere dans la console//
+	//for (size_t i = 0; i < carte.rawDecor.size(); i++)
+	//{
+	//	string slt = carte.rawDecor[i];
+	//	for (size_t t = 0; t < carte.rawDecor[0].size(); t++)
+	//	{
+	//		cout << slt[t];
+	//	}
+	//	cout << endl;
+	//}
 
 	//lave//
 	vector<string> riviereLave = {
@@ -125,16 +114,6 @@ int main()
 	};
 
 
-	//affichage de lave dans la console//
-	for (size_t i = 0; i < riviereLave.size(); i++)
-	{
-		string slt = riviereLave[i];
-		for (size_t t = 0; t < riviereLave[0].size(); t++)
-		{
-			cout << slt[t];
-		}
-		cout << endl;
-	}
 
 	//FIN ELEMENTS CARTE (DECOR)//
 
@@ -184,8 +163,13 @@ int main()
 	{
 		cout << "Texture error" << endl;
 	}
-	Collectable tacos(tacosTexture);
+
+	sf::Sprite tacos;
+	tacos.setTexture(tacosTexture);
+
+	Collectable tacosOld(tacosTexture);
 	vector <sf::Sprite> tacosTab;
+	//creation des collectables
 	for (size_t i = 0; i < 5; i++)
 	{
 		sf::Sprite tacos;
@@ -196,7 +180,7 @@ int main()
 			tile_x = rand() % 8;
 			tile_y = rand() % 9;
 			//cout << "tentative ratée";
-		} while (frontiere[tile_y][tile_x] == 'f');
+		} while (carte.rawDecor[tile_y][tile_x] == 'f');
 		tacos.setPosition(tile_x * 100, tile_y * 100);
 
 		tacos.setScale(0.5, 0.5);
@@ -207,7 +191,11 @@ int main()
 	{
 		cout << "Texture error" << endl;
 	}
-	Collectable brique(briqueTexture);
+
+	sf::Sprite brique;
+	brique.setTexture(briqueTexture);
+
+	Collectable briqueOld(briqueTexture);
 	vector <sf::Sprite> briqueTab;
 	for (size_t i = 0; i < 15; i++)
 	{
@@ -218,7 +206,7 @@ int main()
 		do {
 			tile_x = rand() % 8;
 			tile_y = rand() % 9;
-		} while (frontiere[tile_y][tile_x] == 'f');
+		} while (carte.rawDecor[tile_y][tile_x] == 'f');
 		brique.setPosition(tile_x * 100, tile_y * 100);
 
 		brique.setScale(0.5, 0.5);
@@ -243,7 +231,7 @@ int main()
 			tile_x = rand() % 8;
 			tile_y = rand() % 9;
 			//cout << "tentative ratée";
-		} while (frontiere[tile_y][tile_x] == 'f');
+		} while (carte.rawDecor[tile_y][tile_x] == 'f');
 		pinata._Sprite.setPosition(tile_x * 100, tile_y * 100);
 
 		pinata._Sprite.setScale(1.0, 1.0);
@@ -267,7 +255,7 @@ int main()
 			tile_x = rand() % 8;
 			tile_y = rand() % 9;
 			//cout << "tentative ratée";
-		} while (frontiere[tile_y][tile_x] == 'f');
+		} while (carte.rawDecor[tile_y][tile_x] == 'f');
 		mexican._Sprite.setPosition(tile_x * 100, tile_y * 100);
 
 		mexican._Sprite.setScale(1.0, 1.0);
@@ -293,7 +281,7 @@ int main()
 			tile_x = rand() % 8;
 			tile_y = rand() % 9;
 			//cout << "tentative ratée";
-		} while (frontiere[tile_y][tile_x] == 'f');
+		} while (carte.rawDecor[tile_y][tile_x] == 'f');
 		box.setPosition(tile_x * 100, tile_y * 100);
 
 		//box.setScale(1.0, 1.0);
@@ -323,21 +311,25 @@ int main()
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 		{
-			player_trump.moveLeft(horizontal);
+			horizontal = -1;
+			//player_trump.moveLeft(horizontal);
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 		{
-			player_trump.moveRight(horizontal);
+			horizontal = 1;
+			//player_trump.moveRight(horizontal);
 
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 		{
-			player_trump.moveUp(vertical);
+			vertical = -1;
+			//player_trump.moveUp(vertical);
 
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 		{
-			player_trump.moveDown(vertical);
+			vertical = 1;
+			//player_trump.moveDown(vertical);
 
 		}
 
@@ -355,9 +347,27 @@ int main()
 
 		///////////////////////// FIN KEYPRESS ///////////////////////// 
 		///////////////////////// UPDATE /////////////////////////
+		string case_actuelle;
 
-		interfaceVie.setString("Point de Vie : " + to_string(player_trump.ptVie));
-		interfaceBrique.setString("Briques : " + to_string(briquesCount));
+		if (!Collision::tile_place_meeting(horizontal, vertical, player_trump._Sprite, carte, true)) {
+			player_trump._Sprite.move(horizontal * 0.20, vertical * 0.20);
+			int xx = player_trump._Sprite.getPosition().x / 100;
+			int yy = player_trump._Sprite.getPosition().y / 100;
+			case_actuelle = carte.decor[xx][yy];
+			cout << case_actuelle << endl;
+			if (case_actuelle == "t")
+			{
+				player_trump.ptVie++;
+				carte.decor[xx][yy] = "_";
+			}
+			else if (case_actuelle == "b")
+			{
+				briquesCount++;
+				carte.decor[xx][yy] = "_";
+			}
+		}
+
+
 		playerCenter = sf::Vector2f(player_trump._Sprite.getPosition().x, player_trump._Sprite.getPosition().y);
 
 
@@ -371,19 +381,19 @@ int main()
 
 				if (pinataTab[y].ennemisHaveTakeDamage == false)
 				{
-					if (Collision::BoundingBoxTest(projectiles[i].sprite, pinataTab[y]._Sprite))
-					{
+					//if (Collision::BoundingBoxTest(projectiles[i].sprite, pinataTab[y]._Sprite))
+					//{
 
-						pinataTab[y].ennemisTakeDamage(100);
+					//	pinataTab[y].ennemisTakeDamage(100);
 
-						if (pinataTab[y].ptVieEnnemis <= 0)
-						{
-							//pinataTab.erase(pinataTab.begin() + y);
-							pinataTab[y]._Sprite.setTexture(pinata_brokenTexture);
-						}
-						projectiles.erase(projectiles.begin() + i);
-						continue;
-					}
+					//	if (pinataTab[y].ptVieEnnemis <= 0)
+					//	{
+					//		//pinataTab.erase(pinataTab.begin() + y);
+					//		pinataTab[y]._Sprite.setTexture(pinata_brokenTexture);
+					//	}
+					//	projectiles.erase(projectiles.begin() + i);
+					//	continue;
+					//}
 				}
 			}
 		}
@@ -398,21 +408,21 @@ int main()
 
 				if (mexicanTab[y].ennemisHaveTakeDamage == false)
 				{
-					if (Collision::BoundingBoxTest(projectiles[i].sprite, mexicanTab[y]._Sprite))
-					{
+					//if (Collision::BoundingBoxTest(projectiles[i].sprite, mexicanTab[y]._Sprite))
+					//{
 
-						mexicanTab[y].ennemisTakeDamage(1);
+					//	mexicanTab[y].ennemisTakeDamage(1);
 
-						if (mexicanTab[y].ptVieEnnemis <= 0)
-						{
-							//mexicanTab.erase(mexicanTab.begin() + y);
-							mexicanTab[y]._Sprite.setTexture(hatTexture);
+					//	if (mexicanTab[y].ptVieEnnemis <= 0)
+					//	{
+					//		//mexicanTab.erase(mexicanTab.begin() + y);
+					//		mexicanTab[y]._Sprite.setTexture(hatTexture);
 
-							mexicanTab[y].isMort = true;
+					//		mexicanTab[y].isMort = true;
 
-						}
-						projectiles.erase(projectiles.begin() + i);
-					}
+					//	}
+					//	projectiles.erase(projectiles.begin() + i);
+					//}
 				}
 			}
 		}
@@ -430,53 +440,69 @@ int main()
 
 		///////////////////////// FIN UPDATE /////////////////////
 		///////////////////////// RENDER ///////////////////////// 
+
+		interfaceVie.setString("Point de Vie : " + to_string(player_trump.ptVie));
+		interfaceBrique.setString("Briques : " + to_string(briquesCount));
+
 		/// Background ///
 		window.draw(sol);
 
-		for (size_t i = 0; i < frontiere.size(); i++)
+		for (size_t y = 0; y < 9; y++)
 		{
-			string slt = frontiere[i];
-			for (size_t t = 0; t < frontiere[0].size(); t++)
+			for (size_t x = 0; x < 8; x++)
 			{
-				if (slt[t] == 'f') {
-					cactus.setPosition(t * CaseTaille, i * CaseTaille);
+				if (carte.decor[x][y] == "f") {
+					cactus.setPosition(x * CaseTaille, y * CaseTaille);
 					window.draw(cactus);
 				}
-			}
-		}
-
-		for (size_t i = 0; i < riviereLave.size(); i++)
-		{
-			string slt = riviereLave[i];
-			for (size_t t = 0; t < riviereLave[0].size(); t++)
-			{
-				if (slt[t] == 'f') {
-					lave.setPosition(t * CaseTaille, i * CaseTaille);
+				else if (carte.decor[x][y] == "l") {
+					lave.setPosition(x * CaseTaille, y * CaseTaille);
 					window.draw(lave);
+				}
+				else if (carte.decor[x][y] == "b") {
+					brique.setPosition(x * CaseTaille, y * CaseTaille);
+					window.draw(brique);
+				}
+				else if (carte.decor[x][y] == "t") {
+					tacos.setPosition(x * CaseTaille, y * CaseTaille);
+					window.draw(tacos);
 				}
 			}
 		}
+
+
+		//for (size_t i = 0; i < riviereLave.size(); i++)
+		//{
+		//	string slt = riviereLave[i];
+		//	for (size_t t = 0; t < riviereLave[0].size(); t++)
+		//	{
+		//		if (slt[t] == 'f') {
+		//			lave.setPosition(t * CaseTaille, i * CaseTaille);
+		//			window.draw(lave);
+		//		}
+		//	}
+		//}
 		/// Player item etc... ///
 
-		for (size_t i = 0; i < briqueTab.size(); i++)
-		{
-			window.draw(briqueTab[i]);
-			if (Collision::BoundingBoxTest(player_trump._Sprite, briqueTab[i])) {
-				briqueTab.erase(briqueTab.begin() + i);
-				briquesCount++;
-			}
+		//for (size_t i = 0; i < briqueTab.size(); i++)
+		//{
+		//	window.draw(briqueTab[i]);
+		//	/*	if (Collision::BoundingBoxTest(player_trump._Sprite, briqueTab[i])) {
+		//			briqueTab.erase(briqueTab.begin() + i);
+		//			briquesCount++;
+		//		}*/
 
 
-		}
+		//}
 
-		for (size_t i = 0; i < tacosTab.size(); i++)
-		{
-			window.draw(tacosTab[i]);
-			if (Collision::BoundingBoxTest(player_trump._Sprite, tacosTab[i])) {
-				tacosTab.erase(tacosTab.begin() + i);
-				player_trump.ptVie++;
-			}
-		}
+		//for (size_t i = 0; i < tacosTab.size(); i++)
+		//{
+		//	window.draw(tacosTab[i]);
+		//	/*		if (Collision::BoundingBoxTest(player_trump._Sprite, tacosTab[i])) {
+		//				tacosTab.erase(tacosTab.begin() + i);
+		//				player_trump.ptVie++;
+		//			}*/
+		//}
 
 		for (size_t i = 0; i < boxTab.size(); i++)
 		{
@@ -492,11 +518,11 @@ int main()
 			{
 				if (pinataTab[i].isMort == false)
 				{
-					if (Collision::BoundingBoxTest(player_trump._Sprite, pinataTab[i]._Sprite)) {
+					/*if (Collision::BoundingBoxTest(player_trump._Sprite, pinataTab[i]._Sprite)) {
 						player_trump.takeDamage(1);
-					}
+					}*/
 				}
-				
+
 			}
 		}
 
@@ -509,9 +535,9 @@ int main()
 			{
 				if (mexicanTab[i].isMort == false)
 				{
-					if (Collision::BoundingBoxTest(player_trump._Sprite, mexicanTab[i]._Sprite)) {
-						  player_trump.takeDamage(1);
-					}
+					/*		if (Collision::BoundingBoxTest(player_trump._Sprite, mexicanTab[i]._Sprite)) {
+								player_trump.takeDamage(1);
+							}*/
 				}
 			}
 		}

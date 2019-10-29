@@ -1,77 +1,31 @@
-/*
- * File:   collision.h
- * Authors: Nick Koirala (original version), ahnonay (SFML2 compatibility)
- *
- * Collision Detection and handling class
- * For SFML2.
-
-Notice from the original version:
-
-(c) 2009 - LittleMonkey Ltd
-
-This software is provided 'as-is', without any express or
-implied warranty. In no event will the authors be held
-liable for any damages arising from the use of this software.
-
-Permission is granted to anyone to use this software for any purpose,
-including commercial applications, and to alter it and redistribute
-it freely, subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented;
-   you must not claim that you wrote the original software.
-   If you use this software in a product, an acknowledgment
-   in the product documentation would be appreciated but
-   is not required.
-
-2. Altered source versions must be plainly marked as such,
-   and must not be misrepresented as being the original software.
-
-3. This notice may not be removed or altered from any
-   source distribution.
-
- *
- * Created on 30 January 2009, 11:02
- */
-
-#ifndef COLLISION_H
-#define COLLISION_H
-
+#pragma once
 #include <SFML/Graphics.hpp>
+#include "Carte.h"
 
-namespace Collision {
-	//////
-	/// Test for a collision between two sprites by comparing the alpha values of overlapping pixels
-	/// Supports scaling and rotation
-	/// AlphaLimit: The threshold at which a pixel becomes "solid". If AlphaLimit is 127, a pixel with
-	/// alpha value 128 will cause a collision and a pixel with alpha value 126 will not.
-	/// 
-	/// This functions creates bitmasks of the textures of the two sprites by
-	/// downloading the textures from the graphics card to memory -> SLOW!
-	/// You can avoid this by using the "CreateTextureAndBitmask" function
-	//////
-	bool PixelPerfectTest(const sf::Sprite& Object1, const sf::Sprite& Object2, sf::Uint8 AlphaLimit = 0);
+class Collision
+{
+public:
 
-	//////
-	/// Replaces Texture::loadFromFile
-	/// Load an imagefile into the given texture and create a bitmask for it
-	/// This is much faster than creating the bitmask for a texture on the first run of "PixelPerfectTest"
-	/// 
-	/// The function returns false if the file could not be opened for some reason
-	//////
-	bool CreateTextureAndBitmask(sf::Texture& LoadInto, const std::string& Filename);
+	/// <summary>
+	/// gestion des collisions entre un sprite et une tile inspiré par https://www.youtube.com/watch?v=sGm8LZJXSIg
+	/// </summary>
+	/// <param name="offsetX">offset x.</param>
+	/// <param name="offsetY">offset y.</param>
+	/// <param name="mobileObject">l'objet qui se deplace</param>
+	/// <param name="room">la piece actuel </param>
+	/// <param name="center">si definie a <c>true</c> on centre la collision</param>
+	/// <param name="reduction">reduction de la zone de collision <b>0</b> par defaut</param>
+	/// <returns></returns>
+	static bool tile_place_meeting(int offsetX, int offsetY, sf::Sprite mobileObject, Carte& room, bool center = false, int reduction = 0);
 
-	//////
-	/// Test for collision using circle collision dection
-	/// Radius is averaged from the dimensions of the sprite so
-	/// roughly circular objects will be much more accurate
-	//////
-	bool CircleTest(const sf::Sprite& Object1, const sf::Sprite& Object2);
-
-	//////
-	/// Test for bounding box collision using the Separating Axis Theorem
-	/// Supports scaling and rotation
-	//////
-	bool BoundingBoxTest(const sf::Sprite& Object1, const sf::Sprite& Object2);
-}
-
-#endif	/* COLLISION_H */
+	/// <summary>
+	/// verification de collision entre un obj qui se deplace et un obj fix
+	/// </summary>
+	/// <param name="moving">Sprite/RectangleShape de l'object se deplaçant.</param>
+	/// <param name="fix">Sprite de l'object fix.</param>
+	/// <param name="hori">decalage horizontale.</param>
+	/// <param name="verti">decalage verticale.</param>
+	/// <returns><b>true</b> si collision</returns>
+	static bool mob_place_meeting(sf::Sprite moving, sf::Sprite fix, int hori = 0, int verti = 0);
+	static bool mob_place_meeting(sf::RectangleShape moving, sf::Sprite fix, int hori = 0, int verti = 0);
+};

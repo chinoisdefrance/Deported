@@ -62,14 +62,14 @@ void Player::update()
 Player::Player(sf::Texture& TEMP_Trump)
 {
 	_Sprite.setTexture(TEMP_Trump);
-	_Sprite.setPosition(400 - imageSize, 450 - imageSize);
-	_Sprite.setPosition(0, 0);
-	_Sprite.setScale(1.0f, 1.0f);
-	sf::Vector2i _Source(1, Down);
-	_Sprite.setTextureRect(sf::IntRect(_Source.x * imageSize, _Source.y * imageSize, imageSize, imageSize));
+	//_Sprite.setPosition(400 - imageSize, 450 - imageSize);
+	//_Sprite.setPosition(0, 0);
+	//_Sprite.setScale(1.0f, 1.0f);
+	//sf::Vector2i _Source(1, Down);
+	//_Sprite.setTextureRect(sf::IntRect(_Source.x * imageSize, _Source.y * imageSize, imageSize, imageSize));
 
-	_AnimTime = sf::milliseconds(80);
-	_Speed = 0.20;
+	//_AnimTime = sf::milliseconds(80);
+	//_Speed = 0.20;
 	_Sprite.setOrigin(_Sprite.getGlobalBounds().width / 2, _Sprite.getGlobalBounds().height / 2);
 }
 
