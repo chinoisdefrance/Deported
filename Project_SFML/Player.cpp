@@ -30,6 +30,12 @@ void Player::shootTweet()
 	tweetTime = false;
 }
 
+void Player::spriteAttackFinish()
+{
+	_ClockReturnSprite.restart();
+	spriteReturn = false;
+}
+
 void Player::takeDamage(int damage = 1)
 {
 	ptVie -= damage;

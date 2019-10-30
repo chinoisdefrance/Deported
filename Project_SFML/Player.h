@@ -22,6 +22,7 @@ private:
 public:
 	sf::Sprite _Sprite;//Declare Player Sprite
 	sf::Clock _ClockInvincible;
+	sf::Clock _ClockReturnSprite;
 	sf::Clock tweetClock;
 	Player();//Constructor
 	Player(sf::Texture&);//Overload Constructor
@@ -53,10 +54,12 @@ public:
 	int x;
 	bool invincible = false;
 	bool tweetTime = false;
+	bool spriteReturn = false;
 	bool haveTakeDamage = false;
 
 	void player_move(int, int);
 	void shootTweet();
+	void spriteAttackFinish();
 	void takeDamage(int damage);
 	void update();
 };

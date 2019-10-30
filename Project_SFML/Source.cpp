@@ -58,6 +58,7 @@ int main()
 	sf::Texture pinata_brokenTexture;
 	sf::Texture laveTexture;
 	sf::Texture t_projectile;
+	sf::Texture attackTexture;
 
 	//Rechercher textures dans doc
 
@@ -67,6 +68,8 @@ int main()
 	t_projectile.loadFromFile("twitter.png");
 	pinata_brokenTexture.loadFromFile("broken-pinata.png");
 	hatTexture.loadFromFile("mexican_hat.png");
+	attackTexture.loadFromFile("trump_attack.png");
+
 	//MUSIC//
 
 	if (!music.openFromFile("Jarabes.ogg"))
@@ -148,7 +151,7 @@ int main()
 #pragma endregion
 
 #pragma region player
-	if (!playerTexture.loadFromFile("trump_run.png"))
+	if (!playerTexture.loadFromFile("happy_trump.png"))
 	{
 		cout << "Texture error" << endl;
 	}
@@ -159,7 +162,7 @@ int main()
 	///////////////////////// VECTOR ///////////////////////// 
 	///////////////////////// COLLECTABLES ///////////////////
 
-	if (!tacosTexture.loadFromFile("tacos.png"))
+	if (!tacosTexture.loadFromFile("tacotrump.png"))
 	{
 		cout << "Texture error" << endl;
 	}
@@ -342,7 +345,10 @@ int main()
 				project.sprite.setTexture(t_projectile);
 				projectiles.push_back(project);
 				player_trump.shootTweet();
+				player_trump._Sprite.setTexture(attackTexture);
+				player_trump.spriteReturn = true;
 			}
+			
 		}
 
 		///////////////////////// FIN KEYPRESS ///////////////////////// 
@@ -366,7 +372,18 @@ int main()
 				carte.decor[xx][yy] = "_";
 			}
 		}
+		
+		if (player_trump.spriteReturn)
+		{
+			if (player_trump._ClockReturnSprite.getElapsedTime().asSeconds()>1)
+			{
+			
 
+				player_trump.spriteAttackFinish();
+				player_trump._Sprite.setTexture(playerTexture);
+
+			}
+		}
 
 		playerCenter = sf::Vector2f(player_trump._Sprite.getPosition().x, player_trump._Sprite.getPosition().y);
 
