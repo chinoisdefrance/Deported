@@ -1,14 +1,11 @@
 #include "Player.h"
 
 
-Player::Player()
-{
-	direction_H = 0;
-	direction_V = 0;
-}
+
 
 sf::Sprite Player::getSprite() const
 {
+
 	return sf::Sprite();
 }
 
@@ -38,12 +35,21 @@ void Player::spriteAttackFinish()
 
 void Player::takeDamage(int damage = 1)
 {
-	ptVie -= damage;
-	_Sprite.setColor(sf::Color::Red);
-	_ClockInvincible.restart();
-	invincible = true;
-	haveTakeDamage = true;
-
+	
+	if (ptVie <= 0)
+	{
+		gameOver = true;
+		
+	}
+	else
+	{
+		ptVie -= damage;
+		_Sprite.setColor(sf::Color::Red);
+		_Sprite.setTexture(stuntTexture);
+		_ClockInvincible.restart();
+		invincible = true;
+		haveTakeDamage = true;
+	}
 }
 
 void Player::update()
@@ -57,17 +63,27 @@ void Player::update()
 			haveTakeDamage = false;
 			_Sprite.setColor(sf::Color::White);
 		}
+
 	}
 	if (tweetClock.getElapsedTime().asSeconds() >= 0.5)
 	{
 		tweetTime = true;
 	}
+
+	
 }
 
 
 Player::Player(sf::Texture& TEMP_Trump)
 {
 	_Sprite.setTexture(TEMP_Trump);
+
+	if (!stuntTexture.loadFromFile("trump_stunt.png"))
+	{
+		cout << "Texture error" << endl;
+	}
+	direction_H = 0;
+	direction_V = 0;
 	//_Sprite.setPosition(400 - imageSize, 450 - imageSize);
 	//_Sprite.setPosition(0, 0);
 	//_Sprite.setScale(1.0f, 1.0f);

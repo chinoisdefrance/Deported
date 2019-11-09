@@ -22,11 +22,16 @@ int main()
 	const int CaseTaille = 100;
 
 	int briquesCount = 0;
-	int tacosCount = 0;
 	bool invincible;
 
 	int horizontal = 0;
 	int vertical = 0;
+
+
+	int ancien_horizontal = -1;
+	int ancien_vertical = 0;
+
+
 
 	sf::Vector2f playerCenter;
 	vector<Projectile> projectiles;
@@ -53,12 +58,17 @@ int main()
 	sf::Texture solTexture;
 	sf::Texture mexicanTexture;
 	sf::Texture tacosTexture;
-	sf::Texture boxTexture;
 	sf::Texture hatTexture;
 	sf::Texture pinata_brokenTexture;
 	sf::Texture laveTexture;
 	sf::Texture t_projectile;
 	sf::Texture attackTexture;
+	//sf::Texture stuntTexture;
+	sf::Texture dieTexture;
+	sf::Texture ecranGameOver;
+	sf::Texture screenEnd;
+	sf::Texture gameOverEcranTexture;
+
 
 	//Rechercher textures dans doc
 
@@ -69,6 +79,15 @@ int main()
 	pinata_brokenTexture.loadFromFile("broken-pinata.png");
 	hatTexture.loadFromFile("mexican_hat.png");
 	attackTexture.loadFromFile("trump_attack.png");
+	//stuntTexture.loadFromFile("trump_stunt.png");
+	dieTexture.loadFromFile("dying_trump.png");
+	ecranGameOver.loadFromFile("gameOver.png");
+	screenEnd.loadFromFile("end.jpg");
+	sf::Sprite gameOverEcran;
+	gameOverEcranTexture.loadFromFile("gameOver.png");
+
+
+	gameOverEcran.setTexture(gameOverEcranTexture);
 
 	//MUSIC//
 
@@ -103,7 +122,7 @@ int main()
 	//}
 
 	//lave//
-	vector<string> riviereLave = {
+	/*vector<string> riviereLave = {
 
 		"________",
 		"________",
@@ -114,7 +133,7 @@ int main()
 		"________",
 		"________",
 		"________",
-	};
+	};*/
 
 
 
@@ -266,31 +285,6 @@ int main()
 	}
 
 	///////////////////////// FIN ENNEMIS ////////////////////////
-
-	///////////////////////// BOX ////////////////////////////////
-	if (!boxTexture.loadFromFile("box.png"))
-	{
-		cout << "Texture error" << endl;
-	}
-	box box(boxTexture);
-	vector <sf::Sprite> boxTab;
-	for (size_t i = 0; i < 2; i++)
-	{
-		sf::Sprite box;
-		box.setTexture(boxTexture);
-		int tile_x;
-		int tile_y;
-		do {
-			tile_x = rand() % 8;
-			tile_y = rand() % 9;
-			//cout << "tentative ratée";
-		} while (carte.rawDecor[tile_y][tile_x] == 'f');
-		box.setPosition(tile_x * 100, tile_y * 100);
-
-		//box.setScale(1.0, 1.0);
-		boxTab.push_back(box);
-	}
-	/////////////////////////FIN BOX /////////////////////////////
 	///////////////////////// FIN VECTOR ///////////////////////// 
 
 	while (window.isOpen())
@@ -309,31 +303,17 @@ int main()
 		window.clear();
 		///////////////////////// FIN SFML EVENTS ///////////////////
 		///////////////////////// KEYPRESS ///////////////////////// //////////////////////////////////////
-		horizontal = 0;
-		vertical = 0;
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+
+
+		if (horizontal == 0 && vertical == 0)
 		{
-			horizontal = -1;
-			//player_trump.moveLeft(horizontal);
-		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		{
-			horizontal = 1;
-			//player_trump.moveRight(horizontal);
 
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+		else
 		{
-			vertical = -1;
-			//player_trump.moveUp(vertical);
-
-		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-		{
-			vertical = 1;
-			//player_trump.moveDown(vertical);
-
+			ancien_horizontal = horizontal;
+			ancien_vertical = vertical;
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
@@ -341,50 +321,148 @@ int main()
 
 			if (player_trump.tweetTime)
 			{
-				Projectile project(player_trump._Sprite.getPosition().x, player_trump._Sprite.getPosition().y, player_trump.direction_H, player_trump.direction_V);
+				Projectile project(player_trump._Sprite.getPosition().x, player_trump._Sprite.getPosition().y, ancien_horizontal, ancien_vertical);
 				project.sprite.setTexture(t_projectile);
 				projectiles.push_back(project);
 				player_trump.shootTweet();
 				player_trump._Sprite.setTexture(attackTexture);
 				player_trump.spriteReturn = true;
 			}
-			
+
 		}
+
+
+		horizontal = 0;
+		vertical = 0;
+
+		if (player_trump.gameOver == false)
+		{
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+			{
+				horizontal = -1;
+				player_trump._Sprite.setScale(1, 1);
+				//player_trump.moveLeft(horizontal);
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+			{
+				horizontal = 1;
+				player_trump._Sprite.setScale(-1, 1);
+				//player_trump.moveRight(horizontal);
+
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+			{
+				vertical = -1;
+				//player_trump.moveUp(vertical);
+
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+			{
+				vertical = 1;
+				//player_trump.moveDown(vertical);
+
+			}
+		}
+
+
+
+
 
 		///////////////////////// FIN KEYPRESS ///////////////////////// 
 		///////////////////////// UPDATE /////////////////////////
 		string case_actuelle;
-
 		if (!Collision::tile_place_meeting(horizontal, vertical, player_trump._Sprite, carte, true)) {
-			player_trump._Sprite.move(horizontal * 0.20, vertical * 0.20);
+
+			bool boitebloquee = false;
+			bool collisionBoxBetween = false;
+#pragma region collisions
+			for (size_t i = 0; i < carte.niveaux[carte.niveau_actuel].boxx.size(); i++)
+			{
+				if (Collision::mob_place_meeting(carte.niveaux[carte.niveau_actuel].boxx[i]._Sprite, player_trump._Sprite)) {
+					if (Collision::tile_place_meeting(horizontal, vertical, carte.niveaux[carte.niveau_actuel].boxx[i]._Sprite, carte) == false) {
+						
+						for (size_t y = 0; y < carte.niveaux[carte.niveau_actuel].boxx.size(); y++)
+						{
+
+							if (carte.niveaux[carte.niveau_actuel].boxx[i]._Sprite.getPosition() != carte.niveaux[carte.niveau_actuel].boxx[y]._Sprite.getPosition())
+							{
+								if (Collision::mob_place_meeting(carte.niveaux[carte.niveau_actuel].boxx[i]._Sprite, carte.niveaux[carte.niveau_actuel].boxx[y]._Sprite))
+								{
+									collisionBoxBetween = true;
+								}
+							}
+
+						}
+						if (!collisionBoxBetween)
+						{
+
+						carte.niveaux[carte.niveau_actuel].boxx[i]._Sprite.move(horizontal, vertical);
+						}
+					}
+					else {
+						boitebloquee = true;
+					}
+
+					
+				}
+			}
+#pragma endregion
+
+			if (boitebloquee == false && collisionBoxBetween == false) {
+				player_trump._Sprite.move(horizontal * 0.20, vertical * 0.20);
+			}
 			int xx = player_trump._Sprite.getPosition().x / 100;
 			int yy = player_trump._Sprite.getPosition().y / 100;
-			case_actuelle = carte.decor[xx][yy];
-			cout << case_actuelle << endl;
+			case_actuelle = carte.niveaux[carte.niveau_actuel].decor[xx][yy];
+			//cout << case_actuelle << endl;
 			if (case_actuelle == "t")
 			{
 				player_trump.ptVie++;
-				carte.decor[xx][yy] = "_";
+				carte.niveaux[carte.niveau_actuel].decor[xx][yy] = "_";
 			}
 			else if (case_actuelle == "b")
 			{
 				briquesCount++;
-				carte.decor[xx][yy] = "_";
+				//carte.niveaux[0].decor[0][0];
+				carte.niveaux[carte.niveau_actuel].decor[xx][yy] = "_";
 			}
+
 		}
-		
+
 		if (player_trump.spriteReturn)
 		{
-			if (player_trump._ClockReturnSprite.getElapsedTime().asSeconds()>1)
+			if (player_trump._ClockReturnSprite.getElapsedTime().asSeconds() > 1)
 			{
-			
-
 				player_trump.spriteAttackFinish();
 				player_trump._Sprite.setTexture(playerTexture);
 
 			}
 		}
 
+		if (player_trump.gameOver == true)
+		{
+			player_trump._Sprite.setTexture(dieTexture);
+		}
+
+		if (player_trump.gameOver == true) {
+
+			if (player_trump.screenGameOver == false)
+			{
+				player_trump.screenGameOver = true;
+				player_trump.ClockDeath.restart();
+			}
+			else {
+
+				player_trump.screenGameOver = true;
+				if (player_trump.ClockDeath.getElapsedTime().asSeconds() >= 1)
+				{
+
+
+				}
+			}
+			cout << "T'as PERDU !!!" << endl;
+
+		}
 		playerCenter = sf::Vector2f(player_trump._Sprite.getPosition().x, player_trump._Sprite.getPosition().y);
 
 
@@ -398,53 +476,51 @@ int main()
 
 				if (pinataTab[y].ennemisHaveTakeDamage == false)
 				{
-					//if (Collision::BoundingBoxTest(projectiles[i].sprite, pinataTab[y]._Sprite))
-					//{
+					if (projectiles[i].sprite.getGlobalBounds().intersects(pinataTab[y]._Sprite.getGlobalBounds()))
+					{
 
-					//	pinataTab[y].ennemisTakeDamage(100);
+						pinataTab[y].ennemisTakeDamage(1);
 
-					//	if (pinataTab[y].ptVieEnnemis <= 0)
-					//	{
-					//		//pinataTab.erase(pinataTab.begin() + y);
-					//		pinataTab[y]._Sprite.setTexture(pinata_brokenTexture);
-					//	}
-					//	projectiles.erase(projectiles.begin() + i);
-					//	continue;
-					//}
+						if (pinataTab[y].ptVieEnnemis <= 0)
+						{
+							//pinataTab.erase(pinataTab.begin() + y);
+							pinataTab[y]._Sprite.setTexture(pinata_brokenTexture);
+						}
+						projectiles.erase(projectiles.begin() + i);
+						continue;
+					}
 				}
 			}
 		}
 
 
 		// Projectile Vs mexican
-		for (size_t i = 0; i < projectiles.size(); i++)
-		{
-			for (size_t y = 0; y < mexicanTab.size(); y++)
-			{
 
+		for (size_t y = 0; y < mexicanTab.size(); y++)
+		{
+			for (size_t i = 0; i < projectiles.size(); i++)
+			{
 
 				if (mexicanTab[y].ennemisHaveTakeDamage == false)
 				{
-					//if (Collision::BoundingBoxTest(projectiles[i].sprite, mexicanTab[y]._Sprite))
-					//{
+					if (projectiles[i].sprite.getGlobalBounds().intersects(mexicanTab[y]._Sprite.getGlobalBounds()))
+					{
 
-					//	mexicanTab[y].ennemisTakeDamage(1);
+						mexicanTab[y].ennemisTakeDamage(1);
 
-					//	if (mexicanTab[y].ptVieEnnemis <= 0)
-					//	{
-					//		//mexicanTab.erase(mexicanTab.begin() + y);
-					//		mexicanTab[y]._Sprite.setTexture(hatTexture);
-
-					//		mexicanTab[y].isMort = true;
-
-					//	}
-					//	projectiles.erase(projectiles.begin() + i);
-					//}
+						if (mexicanTab[y].ptVieEnnemis <= 0)
+						{
+							//pinataTab.erase(pinataTab.begin() + y);
+							mexicanTab[y]._Sprite.setTexture(hatTexture);
+						}
+						projectiles.erase(projectiles.begin() + i);
+						continue;
+					}
 				}
 			}
 		}
 
-		// Projectile Vs bord de l'ecran
+		// Projectile contre bord de l'ecran
 
 		for (size_t i = 0; i < projectiles.size(); i++)
 		{
@@ -454,6 +530,10 @@ int main()
 				projectiles.erase(projectiles.begin() + i);
 			}
 		}
+
+
+
+
 
 		///////////////////////// FIN UPDATE /////////////////////
 		///////////////////////// RENDER ///////////////////////// 
@@ -468,65 +548,32 @@ int main()
 		{
 			for (size_t x = 0; x < 8; x++)
 			{
-				if (carte.decor[x][y] == "f") {
+				if (carte.niveaux[carte.niveau_actuel].decor[x][y] == "f") {
 					cactus.setPosition(x * CaseTaille, y * CaseTaille);
 					window.draw(cactus);
 				}
-				else if (carte.decor[x][y] == "l") {
+				else if (carte.niveaux[carte.niveau_actuel].decor[x][y] == "l") {
 					lave.setPosition(x * CaseTaille, y * CaseTaille);
 					window.draw(lave);
 				}
-				else if (carte.decor[x][y] == "b") {
+				else if (carte.niveaux[carte.niveau_actuel].decor[x][y] == "b") {
 					brique.setPosition(x * CaseTaille, y * CaseTaille);
 					window.draw(brique);
 				}
-				else if (carte.decor[x][y] == "t") {
+				else if (carte.niveaux[carte.niveau_actuel].decor[x][y] == "t") {
 					tacos.setPosition(x * CaseTaille, y * CaseTaille);
 					window.draw(tacos);
 				}
 			}
 		}
 
-
-		//for (size_t i = 0; i < riviereLave.size(); i++)
-		//{
-		//	string slt = riviereLave[i];
-		//	for (size_t t = 0; t < riviereLave[0].size(); t++)
-		//	{
-		//		if (slt[t] == 'f') {
-		//			lave.setPosition(t * CaseTaille, i * CaseTaille);
-		//			window.draw(lave);
-		//		}
-		//	}
-		//}
-		/// Player item etc... ///
-
-		//for (size_t i = 0; i < briqueTab.size(); i++)
-		//{
-		//	window.draw(briqueTab[i]);
-		//	/*	if (Collision::BoundingBoxTest(player_trump._Sprite, briqueTab[i])) {
-		//			briqueTab.erase(briqueTab.begin() + i);
-		//			briquesCount++;
-		//		}*/
-
-
-		//}
-
-		//for (size_t i = 0; i < tacosTab.size(); i++)
-		//{
-		//	window.draw(tacosTab[i]);
-		//	/*		if (Collision::BoundingBoxTest(player_trump._Sprite, tacosTab[i])) {
-		//				tacosTab.erase(tacosTab.begin() + i);
-		//				player_trump.ptVie++;
-		//			}*/
-		//}
-
-		for (size_t i = 0; i < boxTab.size(); i++)
+		for (size_t i = 0; i < carte.niveaux[carte.niveau_actuel].boxx.size(); i++)
 		{
-			window.draw(boxTab[i]);
+			window.draw(carte.niveaux[carte.niveau_actuel].boxx[i]._Sprite);
 
 		}
 		///////////////////////// ENNEMIS //////////////////////
+#pragma region ennemis
 		for (size_t i = 0; i < pinataTab.size(); i++)
 		{
 			//if (pinataTab[i].isMort == false && mexicanTab[i].isMort == false)
@@ -535,9 +582,11 @@ int main()
 			{
 				if (pinataTab[i].isMort == false)
 				{
-					/*if (Collision::BoundingBoxTest(player_trump._Sprite, pinataTab[i]._Sprite)) {
+					if (player_trump._Sprite.getGlobalBounds().intersects(pinataTab[i]._Sprite.getGlobalBounds()))
+					{
 						player_trump.takeDamage(1);
-					}*/
+
+					}
 				}
 
 			}
@@ -552,12 +601,17 @@ int main()
 			{
 				if (mexicanTab[i].isMort == false)
 				{
-					/*		if (Collision::BoundingBoxTest(player_trump._Sprite, mexicanTab[i]._Sprite)) {
-								player_trump.takeDamage(1);
-							}*/
+					if (player_trump._Sprite.getGlobalBounds().intersects(mexicanTab[i]._Sprite.getGlobalBounds()))
+					{
+						player_trump.takeDamage(1);
+
+					}
 				}
 			}
 		}
+#pragma endregion
+
+
 
 		player_trump.update();
 		///////////////////////// FIN ENNEMIS //////////////////////
@@ -576,6 +630,11 @@ int main()
 		window.draw(interfaceVie);
 		window.draw(interfaceBrique);
 
+
+		if (player_trump.gameOver == true) {
+
+			window.draw(gameOverEcran);
+		}
 		///////////////////////// FIN RENDER //////////////////////
 		window.display();
 

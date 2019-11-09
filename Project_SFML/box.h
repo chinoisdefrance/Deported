@@ -4,18 +4,11 @@
 
 using namespace std;
 
-class box
+class Box
 {
 public:
-
 	sf::Sprite _Sprite;
-
-	box();
-	box(sf::Texture&);
-
-	int imageSize = 100;
-
-	sf::Sprite getSPrite() const;
+	Box();
 
 };
 

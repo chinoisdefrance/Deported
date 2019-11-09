@@ -16,15 +16,13 @@ private:
 	float _Speed; //Player Speed
 	sf::Clock _AnimClock; //Player Animation Clock
 	sf::Time _AnimTime; //Player Animation Time
-
-
+	sf::Texture stuntTexture;
 
 public:
 	sf::Sprite _Sprite;//Declare Player Sprite
 	sf::Clock _ClockInvincible;
 	sf::Clock _ClockReturnSprite;
 	sf::Clock tweetClock;
-	Player();//Constructor
 	Player(sf::Texture&);//Overload Constructor
 	//~Player(); //Destructor
 
@@ -56,6 +54,11 @@ public:
 	bool tweetTime = false;
 	bool spriteReturn = false;
 	bool haveTakeDamage = false;
+
+
+	sf::Clock ClockDeath;
+	bool gameOver = false;
+	bool screenGameOver = false;
 
 	void player_move(int, int);
 	void shootTweet();
