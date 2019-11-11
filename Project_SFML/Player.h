@@ -20,6 +20,11 @@ private:
 
 public:
 	sf::Sprite _Sprite;//Declare Player Sprite
+
+	sf::RectangleShape satouch;
+	int satouchMarge = 20;
+
+	sf::RectangleShape ghost;
 	sf::Clock _ClockInvincible;
 	sf::Clock _ClockReturnSprite;
 	sf::Clock tweetClock;
@@ -65,5 +70,6 @@ public:
 	void spriteAttackFinish();
 	void takeDamage(int damage);
 	void update();
+	void inputs(int hori, int verti);
 };
 

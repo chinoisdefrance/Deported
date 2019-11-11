@@ -16,7 +16,8 @@ public:
 	/// <param name="center">si definie a <c>true</c> on centre la collision</param>
 	/// <param name="reduction">reduction de la zone de collision <b>0</b> par defaut</param>
 	/// <returns></returns>
-	static bool tile_place_meeting(int offsetX, int offsetY, sf::Sprite mobileObject, Carte& room, bool center = false, int reduction = 0);
+	static bool tile_place_meeting(int offsetX, int offsetY, sf::Sprite mobileObject, Carte& room, bool center = false, int reduction = 0, bool bloqueSol = false);
+	static bool tile_place_meeting(int offsetX, int offsetY, sf::RectangleShape mobileObject, Carte& room, bool center = false, int reduction = 0, bool bloqueSol = false);
 
 	/// <summary>
 	/// verification de collision entre un obj qui se deplace et un obj fix

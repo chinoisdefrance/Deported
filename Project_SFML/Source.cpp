@@ -30,6 +30,7 @@ int main()
 
 	int ancien_horizontal = -1;
 	int ancien_vertical = 0;
+	bool haveKey = false;
 
 
 
@@ -48,26 +49,36 @@ int main()
 	sf::RectangleShape sol(sf::Vector2f(800.0f, 900.0f));
 	sf::RectangleShape lave(sf::Vector2f(100.0f, 100.0f));
 
+	sf::Sprite gameOverEcran;
+	sf::Sprite chest;
+	sf::Sprite key;
+	sf::Sprite door;
 
 	//Définir textures 
 
 	sf::Texture playerTexture;
 	sf::Texture briqueTexture;
-	sf::Texture pinataTexture;
+
 	sf::Texture cactusTexture;
 	sf::Texture solTexture;
-	sf::Texture mexicanTexture;
 	sf::Texture tacosTexture;
+
+	//ennemis vaincus
 	sf::Texture hatTexture;
 	sf::Texture pinata_brokenTexture;
+	//fin ennemis vaincus
 	sf::Texture laveTexture;
 	sf::Texture t_projectile;
 	sf::Texture attackTexture;
-	//sf::Texture stuntTexture;
+
 	sf::Texture dieTexture;
 	sf::Texture ecranGameOver;
 	sf::Texture screenEnd;
 	sf::Texture gameOverEcranTexture;
+	sf::Texture chestOpenTexture;
+	sf::Texture chestCloseTexture;
+	sf::Texture keyTexture;
+	sf::Texture doorTexture;
 
 
 	//Rechercher textures dans doc
@@ -83,11 +94,15 @@ int main()
 	dieTexture.loadFromFile("dying_trump.png");
 	ecranGameOver.loadFromFile("gameOver.png");
 	screenEnd.loadFromFile("end.jpg");
-	sf::Sprite gameOverEcran;
+
 	gameOverEcranTexture.loadFromFile("gameOver.png");
-
-
+	chestOpenTexture.loadFromFile("chest_open.png");
+	chestCloseTexture.loadFromFile("chest_close.png");
+	keyTexture.loadFromFile("hamburger.png");
+	key.setTexture(keyTexture);
+	key.setScale(.8, .8);
 	gameOverEcran.setTexture(gameOverEcranTexture);
+	doorTexture.loadFromFile("door.png");
 
 	//MUSIC//
 
@@ -104,40 +119,13 @@ int main()
 	cactus.setTexture(&cactusTexture);
 	sol.setTexture(&solTexture);
 	lave.setTexture(&laveTexture);
-
-	//ELEMENTS CARTE (DECOR)//
-
+	door.setTexture(doorTexture);
 
 
 
-	//affichage de carte.frontiere dans la console//
-	//for (size_t i = 0; i < carte.rawDecor.size(); i++)
-	//{
-	//	string slt = carte.rawDecor[i];
-	//	for (size_t t = 0; t < carte.rawDecor[0].size(); t++)
-	//	{
-	//		cout << slt[t];
-	//	}
-	//	cout << endl;
-	//}
-
-	//lave//
-	/*vector<string> riviereLave = {
-
-		"________",
-		"________",
-		"________",
-		"________",
-		"______f_",
-		"__ff____",
-		"________",
-		"________",
-		"________",
-	};*/
 
 
 
-	//FIN ELEMENTS CARTE (DECOR)//
 
 #pragma region interface
 #pragma region pt vie et compteur brique
@@ -188,27 +176,6 @@ int main()
 
 	sf::Sprite tacos;
 	tacos.setTexture(tacosTexture);
-
-	Collectable tacosOld(tacosTexture);
-	vector <sf::Sprite> tacosTab;
-	//creation des collectables
-	for (size_t i = 0; i < 5; i++)
-	{
-		sf::Sprite tacos;
-		tacos.setTexture(tacosTexture);
-		int tile_x;
-		int tile_y;
-		do {
-			tile_x = rand() % 8;
-			tile_y = rand() % 9;
-			//cout << "tentative ratée";
-		} while (carte.rawDecor[tile_y][tile_x] == 'f');
-		tacos.setPosition(tile_x * 100, tile_y * 100);
-
-		tacos.setScale(0.5, 0.5);
-		tacosTab.push_back(tacos);
-	}
-
 	if (!briqueTexture.loadFromFile("brique.png"))
 	{
 		cout << "Texture error" << endl;
@@ -216,76 +183,9 @@ int main()
 
 	sf::Sprite brique;
 	brique.setTexture(briqueTexture);
-
-	Collectable briqueOld(briqueTexture);
-	vector <sf::Sprite> briqueTab;
-	for (size_t i = 0; i < 15; i++)
-	{
-		sf::Sprite brique;
-		brique.setTexture(briqueTexture);
-		int tile_x;
-		int tile_y;
-		do {
-			tile_x = rand() % 8;
-			tile_y = rand() % 9;
-		} while (carte.rawDecor[tile_y][tile_x] == 'f');
-		brique.setPosition(tile_x * 100, tile_y * 100);
-
-		brique.setScale(0.5, 0.5);
-		briqueTab.push_back(brique);
-	}
 	///////////////////////// FIN COLLECTABLES ///////////////////
-	///////////////////////// ENNEMIS ///////////////////////////
-
-	if (!pinataTexture.loadFromFile("pinata.png"))
-	{
-		cout << "Texture error" << endl;
-	}
-	Ennemis pinata(pinataTexture);
-	vector <Ennemis> pinataTab;
-	for (size_t i = 0; i < 2; i++)
-	{
-		Ennemis pinata;
-		pinata._Sprite.setTexture(pinataTexture);
-		int tile_x;
-		int tile_y;
-		do {
-			tile_x = rand() % 8;
-			tile_y = rand() % 9;
-			//cout << "tentative ratée";
-		} while (carte.rawDecor[tile_y][tile_x] == 'f');
-		pinata._Sprite.setPosition(tile_x * 100, tile_y * 100);
-
-		pinata._Sprite.setScale(1.0, 1.0);
-		pinataTab.push_back(pinata);
-	}
 
 
-	if (!mexicanTexture.loadFromFile("mexican.png"))
-	{
-		cout << "Texture error" << endl;
-	}
-	Ennemis mexican(mexicanTexture);
-	vector <Ennemis> mexicanTab;
-	for (size_t i = 0; i < 2; i++)
-	{
-		Ennemis mexican;
-		mexican._Sprite.setTexture(mexicanTexture);
-		int tile_x;
-		int tile_y;
-		do {
-			tile_x = rand() % 8;
-			tile_y = rand() % 9;
-			//cout << "tentative ratée";
-		} while (carte.rawDecor[tile_y][tile_x] == 'f');
-		mexican._Sprite.setPosition(tile_x * 100, tile_y * 100);
-
-		mexican._Sprite.setScale(1.0, 1.0);
-		mexicanTab.push_back(mexican);
-	}
-
-	///////////////////////// FIN ENNEMIS ////////////////////////
-	///////////////////////// FIN VECTOR ///////////////////////// 
 
 	while (window.isOpen())
 	{
@@ -362,6 +262,10 @@ int main()
 				//player_trump.moveDown(vertical);
 
 			}
+
+
+
+			player_trump.inputs(horizontal, vertical);
 		}
 
 
@@ -370,22 +274,45 @@ int main()
 
 		///////////////////////// FIN KEYPRESS ///////////////////////// 
 		///////////////////////// UPDATE /////////////////////////
+		bool coffreOuvert = false;
+
+		//coffre 
+		if (briquesCount == 3)
+		{
+			coffreOuvert = true;
+			
+			chest.setTexture(chestOpenTexture);
+
+		}
+		else if (briquesCount < 3)
+		{
+			chest.setTexture(chestCloseTexture);
+		}
+
+
+		//COLLiSIONS
 		string case_actuelle;
-		if (!Collision::tile_place_meeting(horizontal, vertical, player_trump._Sprite, carte, true)) {
+		if (!Collision::tile_place_meeting(horizontal, vertical, player_trump.satouch, carte, true, 0, true)) {
 
 			bool boitebloquee = false;
 			bool collisionBoxBetween = false;
+
+
+
 #pragma region collisions
 			for (size_t i = 0; i < carte.niveaux[carte.niveau_actuel].boxx.size(); i++)
 			{
-				if (Collision::mob_place_meeting(carte.niveaux[carte.niveau_actuel].boxx[i]._Sprite, player_trump._Sprite)) {
-					if (Collision::tile_place_meeting(horizontal, vertical, carte.niveaux[carte.niveau_actuel].boxx[i]._Sprite, carte) == false) {
-						
+				// collision entre joeur et colis
+				if (Collision::mob_place_meeting(player_trump.ghost, carte.niveaux[carte.niveau_actuel].boxx[i]._Sprite)) {
+					//verifie si la position du joueur adititioné a son deplacement touche un mur statique
+					if (Collision::tile_place_meeting(horizontal, vertical, carte.niveaux[carte.niveau_actuel].boxx[i]._Sprite, carte, false, 0, false) == false) {
+						//(int xOffset, int yOffset, sf::Sprite sprite, Carte& room, bool center, int reduction, bool bloqueSol)
 						for (size_t y = 0; y < carte.niveaux[carte.niveau_actuel].boxx.size(); y++)
 						{
-
+							// si la caisse poussée est en contact avec une autre caisse elle est stoppée
 							if (carte.niveaux[carte.niveau_actuel].boxx[i]._Sprite.getPosition() != carte.niveaux[carte.niveau_actuel].boxx[y]._Sprite.getPosition())
 							{
+								// empeche de verifier la collision d'un caisse avec elle meme
 								if (Collision::mob_place_meeting(carte.niveaux[carte.niveau_actuel].boxx[i]._Sprite, carte.niveaux[carte.niveau_actuel].boxx[y]._Sprite))
 								{
 									collisionBoxBetween = true;
@@ -395,38 +322,62 @@ int main()
 						}
 						if (!collisionBoxBetween)
 						{
-
-						carte.niveaux[carte.niveau_actuel].boxx[i]._Sprite.move(horizontal, vertical);
+							//deplacement de la caisse
+							carte.niveaux[carte.niveau_actuel].boxx[i]._Sprite.move(horizontal, vertical);
 						}
 					}
 					else {
 						boitebloquee = true;
 					}
 
-					
+
 				}
 			}
 #pragma endregion
 
 			if (boitebloquee == false && collisionBoxBetween == false) {
+				//deplacement du joueur
 				player_trump._Sprite.move(horizontal * 0.20, vertical * 0.20);
 			}
 			int xx = player_trump._Sprite.getPosition().x / 100;
 			int yy = player_trump._Sprite.getPosition().y / 100;
 			case_actuelle = carte.niveaux[carte.niveau_actuel].decor[xx][yy];
-			//cout << case_actuelle << endl;
+
+			//tacos
 			if (case_actuelle == "t")
 			{
 				player_trump.ptVie++;
 				carte.niveaux[carte.niveau_actuel].decor[xx][yy] = "_";
 			}
+			//brique
 			else if (case_actuelle == "b")
 			{
 				briquesCount++;
-				//carte.niveaux[0].decor[0][0];
 				carte.niveaux[carte.niveau_actuel].decor[xx][yy] = "_";
 			}
+			//hamburger
+			else if (case_actuelle == "h")
+			{
+				haveKey = true;
 
+				//carte.niveaux[carte.niveau_actuel].decor[xx][yy] = "_";
+			}
+
+
+		}
+
+		//marcher sur lave grâce à caisses
+		for (size_t i = 0; i < carte.niveaux[carte.niveau_actuel].boxx.size(); i++)
+		{
+			int xx = carte.niveaux[carte.niveau_actuel].boxx[i]._Sprite.getPosition().x / 100;
+			int yy = carte.niveaux[carte.niveau_actuel].boxx[i]._Sprite.getPosition().y / 100;
+			case_actuelle = carte.niveaux[carte.niveau_actuel].decor[xx][yy];
+			if (case_actuelle == "l")
+			{
+
+				carte.niveaux[carte.niveau_actuel].decor[xx][yy] = "_";
+				carte.niveaux[carte.niveau_actuel].boxx.erase(carte.niveaux[carte.niveau_actuel].boxx.begin() + i);
+			}
 		}
 
 		if (player_trump.spriteReturn)
@@ -470,21 +421,25 @@ int main()
 		for (size_t i = 0; i < projectiles.size(); i++)
 		{
 			projectiles[i].update();
-			for (size_t y = 0; y < pinataTab.size(); y++)
+		}
+		for (size_t y = 0; y < carte.niveaux[carte.niveau_actuel].Pinatas.size(); y++)
+		{
+			for (size_t i = 0; i < projectiles.size(); i++)
 			{
 
 
-				if (pinataTab[y].ennemisHaveTakeDamage == false)
+
+				if (carte.niveaux[carte.niveau_actuel].Pinatas[y].ennemisHaveTakeDamage == false)
 				{
-					if (projectiles[i].sprite.getGlobalBounds().intersects(pinataTab[y]._Sprite.getGlobalBounds()))
+					if (projectiles[i].sprite.getGlobalBounds().intersects(carte.niveaux[carte.niveau_actuel].Pinatas[y]._Sprite.getGlobalBounds()))
 					{
 
-						pinataTab[y].ennemisTakeDamage(1);
+						carte.niveaux[carte.niveau_actuel].Pinatas[y].ennemisTakeDamage(1);
 
-						if (pinataTab[y].ptVieEnnemis <= 0)
+						if (carte.niveaux[carte.niveau_actuel].Pinatas[y].ptVieEnnemis <= 0)
 						{
-							//pinataTab.erase(pinataTab.begin() + y);
-							pinataTab[y]._Sprite.setTexture(pinata_brokenTexture);
+
+							carte.niveaux[carte.niveau_actuel].Pinatas[y]._Sprite.setTexture(pinata_brokenTexture);
 						}
 						projectiles.erase(projectiles.begin() + i);
 						continue;
@@ -496,22 +451,22 @@ int main()
 
 		// Projectile Vs mexican
 
-		for (size_t y = 0; y < mexicanTab.size(); y++)
+		for (size_t y = 0; y < carte.niveaux[carte.niveau_actuel].Mexicans.size(); y++)
 		{
 			for (size_t i = 0; i < projectiles.size(); i++)
 			{
 
-				if (mexicanTab[y].ennemisHaveTakeDamage == false)
+				if (carte.niveaux[carte.niveau_actuel].Mexicans[y].ennemisHaveTakeDamage == false)
 				{
-					if (projectiles[i].sprite.getGlobalBounds().intersects(mexicanTab[y]._Sprite.getGlobalBounds()))
+					if (projectiles[i].sprite.getGlobalBounds().intersects(carte.niveaux[carte.niveau_actuel].Mexicans[y]._Sprite.getGlobalBounds()))
 					{
 
-						mexicanTab[y].ennemisTakeDamage(1);
+						carte.niveaux[carte.niveau_actuel].Mexicans[y].ennemisTakeDamage(1);
 
-						if (mexicanTab[y].ptVieEnnemis <= 0)
+						if (carte.niveaux[carte.niveau_actuel].Mexicans[y].ptVieEnnemis <= 0)
 						{
-							//pinataTab.erase(pinataTab.begin() + y);
-							mexicanTab[y]._Sprite.setTexture(hatTexture);
+
+							carte.niveaux[carte.niveau_actuel].Mexicans[y]._Sprite.setTexture(hatTexture);
 						}
 						projectiles.erase(projectiles.begin() + i);
 						continue;
@@ -564,9 +519,32 @@ int main()
 					tacos.setPosition(x * CaseTaille, y * CaseTaille);
 					window.draw(tacos);
 				}
+				else if (carte.niveaux[carte.niveau_actuel].decor[x][y] == "h") {
+					chest.setPosition(x * CaseTaille, y * CaseTaille);
+					key.setPosition(x * CaseTaille, y * CaseTaille);
+					window.draw(chest);
+					if (briquesCount >= 3) { 
+						
+						if (haveKey == false) {
+							window.draw(key);
+							
+						}
+					}
+
+				}
+				else if (carte.niveaux[carte.niveau_actuel].decor[x][y] == "d") {
+					
+					if (haveKey == true)
+					{
+						door.setPosition(x* CaseTaille, y* CaseTaille);
+						window.draw(door);
+					}
+					
+				}
 			}
 		}
-
+		
+		
 		for (size_t i = 0; i < carte.niveaux[carte.niveau_actuel].boxx.size(); i++)
 		{
 			window.draw(carte.niveaux[carte.niveau_actuel].boxx[i]._Sprite);
@@ -574,15 +552,15 @@ int main()
 		}
 		///////////////////////// ENNEMIS //////////////////////
 #pragma region ennemis
-		for (size_t i = 0; i < pinataTab.size(); i++)
+		for (size_t i = 0; i < carte.niveaux[carte.niveau_actuel].Pinatas.size(); i++)
 		{
-			//if (pinataTab[i].isMort == false && mexicanTab[i].isMort == false)
-			window.draw(pinataTab[i]._Sprite);
+			//if (carte.niveaux[carte.niveau_actuel].Pinatas[i].isMort == false && carte.niveaux[carte.niveau_actuel].Mexicans[i].isMort == false)
+			window.draw(carte.niveaux[carte.niveau_actuel].Pinatas[i]._Sprite);
 			if (player_trump.invincible == false)
 			{
-				if (pinataTab[i].isMort == false)
+				if (carte.niveaux[carte.niveau_actuel].Pinatas[i].isMort == false)
 				{
-					if (player_trump._Sprite.getGlobalBounds().intersects(pinataTab[i]._Sprite.getGlobalBounds()))
+					if (player_trump.satouch.getGlobalBounds().intersects(carte.niveaux[carte.niveau_actuel].Pinatas[i]._Sprite.getGlobalBounds()))
 					{
 						player_trump.takeDamage(1);
 
@@ -594,14 +572,14 @@ int main()
 
 
 
-		for (size_t i = 0; i < mexicanTab.size(); i++)
+		for (size_t i = 0; i < carte.niveaux[carte.niveau_actuel].Mexicans.size(); i++)
 		{
-			window.draw(mexicanTab[i]._Sprite);
+			window.draw(carte.niveaux[carte.niveau_actuel].Mexicans[i]._Sprite);
 			if (player_trump.invincible == false)
 			{
-				if (mexicanTab[i].isMort == false)
+				if (carte.niveaux[carte.niveau_actuel].Mexicans[i].isMort == false)
 				{
-					if (player_trump._Sprite.getGlobalBounds().intersects(mexicanTab[i]._Sprite.getGlobalBounds()))
+					if (player_trump.satouch.getGlobalBounds().intersects(carte.niveaux[carte.niveau_actuel].Mexicans[i]._Sprite.getGlobalBounds()))
 					{
 						player_trump.takeDamage(1);
 
@@ -616,8 +594,10 @@ int main()
 		player_trump.update();
 		///////////////////////// FIN ENNEMIS //////////////////////
 
-		window.draw(player_trump._Sprite);
 
+		window.draw(player_trump.ghost);
+		window.draw(player_trump._Sprite);
+		window.draw(player_trump.satouch);
 
 		for (size_t i = 0; i < projectiles.size(); i++)
 		{
