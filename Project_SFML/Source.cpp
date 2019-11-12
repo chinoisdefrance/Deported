@@ -95,12 +95,12 @@ int main()
 	ecranGameOver.loadFromFile("gameOver.png");
 	screenEnd.loadFromFile("end.jpg");
 
-	gameOverEcranTexture.loadFromFile("gameOver.png");
+	gameOverEcranTexture.loadFromFile("gameover.jpg");
 	chestOpenTexture.loadFromFile("chest_open.png");
 	chestCloseTexture.loadFromFile("chest_close.png");
 	keyTexture.loadFromFile("hamburger.png");
 	key.setTexture(keyTexture);
-	key.setScale(.8, .8);
+	//key.setScale(.8, .8);
 	gameOverEcran.setTexture(gameOverEcranTexture);
 	doorTexture.loadFromFile("door.png");
 
