@@ -53,7 +53,7 @@ int main()
 	sf::Sprite gameOverEcran;
 	sf::Sprite chest;
 	sf::Sprite key;
-	sf::Sprite door;
+	sf::Sprite door_open;
 	sf::Sprite caisseDansLave;
 
 	//Définir textures 
@@ -65,7 +65,7 @@ int main()
 	sf::Texture caisseDansLaveTexture;
 	sf::Texture chestOpenTexture;
 	sf::Texture chestCloseTexture;
-	sf::Texture doorTexture;
+	sf::Texture doorOpenTexture;
 
 	//joueur
 	sf::Texture playerTexture;
@@ -120,7 +120,7 @@ int main()
 	key.setTexture(keyTexture);
 
 	//porte texture
-	doorTexture.loadFromFile("door.png");
+	doorOpenTexture.loadFromFile("door_open.png");
 
 	//MUSIC//
 
@@ -137,7 +137,7 @@ int main()
 	cactus.setTexture(&cactusTexture);
 	sol.setTexture(&solTexture);
 	lave.setTexture(&laveTexture);
-	door.setTexture(doorTexture);
+	door_open.setTexture(doorOpenTexture);
 	caisseDansLave.setTexture(caisseDansLaveTexture);
 
 #pragma region interface
@@ -566,8 +566,8 @@ int main()
 
 					if (haveKey == true)
 					{
-						door.setPosition(x * CaseTaille, y * CaseTaille);
-						window.draw(door);
+						door_open.setPosition(x * CaseTaille, y * CaseTaille);
+						window.draw(door_open);
 					}
 
 				}
