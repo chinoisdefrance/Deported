@@ -49,59 +49,77 @@ int main()
 	sf::RectangleShape sol(sf::Vector2f(800.0f, 900.0f));
 	sf::RectangleShape lave(sf::Vector2f(100.0f, 100.0f));
 
+	//Sprites
 	sf::Sprite gameOverEcran;
 	sf::Sprite chest;
 	sf::Sprite key;
 	sf::Sprite door;
+	sf::Sprite caisseDansLave;
 
 	//Définir textures 
 
-	sf::Texture playerTexture;
-	sf::Texture briqueTexture;
-
-	sf::Texture cactusTexture;
+	//décor
 	sf::Texture solTexture;
+	sf::Texture cactusTexture;
+	sf::Texture laveTexture;
+	sf::Texture caisseDansLaveTexture;
+	sf::Texture chestOpenTexture;
+	sf::Texture chestCloseTexture;
+	sf::Texture doorTexture;
+
+	//joueur
+	sf::Texture playerTexture;
+	sf::Texture t_projectile;
+	sf::Texture attackTexture;
+	sf::Texture dieTexture;
+
+	//collectable
 	sf::Texture tacosTexture;
+	sf::Texture briqueTexture;
+	sf::Texture keyTexture;
 
 	//ennemis vaincus
 	sf::Texture hatTexture;
 	sf::Texture pinata_brokenTexture;
-	//fin ennemis vaincus
-	sf::Texture laveTexture;
-	sf::Texture t_projectile;
-	sf::Texture attackTexture;
 
-	sf::Texture dieTexture;
-	sf::Texture ecranGameOver;
+	//écrans
 	sf::Texture screenEnd;
 	sf::Texture gameOverEcranTexture;
-	sf::Texture chestOpenTexture;
-	sf::Texture chestCloseTexture;
-	sf::Texture keyTexture;
-	sf::Texture doorTexture;
-
 
 	//Rechercher textures dans doc
 
+	//texture décor 
 	solTexture.loadFromFile("sable.jpg");
 	cactusTexture.loadFromFile("cactus.png");
 	laveTexture.loadFromFile("lave.jpg");
+	caisseDansLaveTexture.loadFromFile("chemin_lave.png");
+
+	//projectile trump
 	t_projectile.loadFromFile("twitter.png");
+
+	//texture ennemis vaincus
 	pinata_brokenTexture.loadFromFile("broken-pinata.png");
 	hatTexture.loadFromFile("mexican_hat.png");
+
+	//sprites texture trump
 	attackTexture.loadFromFile("trump_attack.png");
 	//stuntTexture.loadFromFile("trump_stunt.png");
 	dieTexture.loadFromFile("dying_trump.png");
-	ecranGameOver.loadFromFile("gameOver.png");
-	screenEnd.loadFromFile("end.jpg");
 
+	//écrans
+	screenEnd.loadFromFile("end.jpg");
 	gameOverEcranTexture.loadFromFile("gameover.jpg");
+	gameOverEcran.setTexture(gameOverEcranTexture);
+
+	//coffre texture
 	chestOpenTexture.loadFromFile("chest_open.png");
 	chestCloseTexture.loadFromFile("chest_close.png");
+
+	//clés texture dans coffre
 	keyTexture.loadFromFile("hamburger.png");
 	key.setTexture(keyTexture);
-	//key.setScale(.8, .8);
-	gameOverEcran.setTexture(gameOverEcranTexture);
+
+	//porte texture
 	doorTexture.loadFromFile("door.png");
 
 	//MUSIC//
@@ -120,12 +138,7 @@ int main()
 	sol.setTexture(&solTexture);
 	lave.setTexture(&laveTexture);
 	door.setTexture(doorTexture);
-
-
-
-
-
-
+	caisseDansLave.setTexture(caisseDansLaveTexture);
 
 #pragma region interface
 #pragma region pt vie et compteur brique
@@ -154,6 +167,7 @@ int main()
 	interfaceBrique.setStyle(sf::Text::Bold);
 	interfaceVie.setPosition(10.0f, 0.0f);
 	interfaceBrique.setPosition(300.0f, 0.0f);
+
 #pragma endregion
 #pragma endregion
 
@@ -175,6 +189,7 @@ int main()
 	}
 
 	sf::Sprite tacos;
+
 	tacos.setTexture(tacosTexture);
 	if (!briqueTexture.loadFromFile("brique.png"))
 	{
@@ -216,6 +231,8 @@ int main()
 			ancien_vertical = vertical;
 		}
 
+		//TIR
+
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 		{
 
@@ -234,6 +251,8 @@ int main()
 
 		horizontal = 0;
 		vertical = 0;
+
+		//DEPLACEMENTS JOUEUR
 
 		if (player_trump.gameOver == false)
 		{
@@ -269,9 +288,6 @@ int main()
 		}
 
 
-
-
-
 		///////////////////////// FIN KEYPRESS ///////////////////////// 
 		///////////////////////// UPDATE /////////////////////////
 		bool coffreOuvert = false;
@@ -280,7 +296,7 @@ int main()
 		if (briquesCount == 3)
 		{
 			coffreOuvert = true;
-			
+
 			chest.setTexture(chestOpenTexture);
 
 		}
@@ -362,6 +378,13 @@ int main()
 
 				//carte.niveaux[carte.niveau_actuel].decor[xx][yy] = "_";
 			}
+			else if (case_actuelle == "d")
+			{
+				//if (carte.niveau_actuel < carte.niveaux.size()) {
+					carte.niveau_actuel = 1;
+				//}
+			}
+
 
 
 		}
@@ -375,11 +398,14 @@ int main()
 			if (case_actuelle == "l")
 			{
 
-				carte.niveaux[carte.niveau_actuel].decor[xx][yy] = "_";
+				carte.niveaux[carte.niveau_actuel].decor[xx][yy] = "q";
 				carte.niveaux[carte.niveau_actuel].boxx.erase(carte.niveaux[carte.niveau_actuel].boxx.begin() + i);
+				//caisseDansLave.setTexture(caisseDansLaveTexture);
+				//caisseDansLave.getPosition().x / 100;
+				//caisseDansLave.getPosition().y / 100;
 			}
 		}
-
+		//sprite attack
 		if (player_trump.spriteReturn)
 		{
 			if (player_trump._ClockReturnSprite.getElapsedTime().asSeconds() > 1)
@@ -389,7 +415,7 @@ int main()
 
 			}
 		}
-
+		// écran game over
 		if (player_trump.gameOver == true)
 		{
 			player_trump._Sprite.setTexture(dieTexture);
@@ -411,7 +437,7 @@ int main()
 
 				}
 			}
-			cout << "T'as PERDU !!!" << endl;
+			//cout << "T'as PERDU !!!" << endl;
 
 		}
 		playerCenter = sf::Vector2f(player_trump._Sprite.getPosition().x, player_trump._Sprite.getPosition().y);
@@ -494,7 +520,7 @@ int main()
 		///////////////////////// RENDER ///////////////////////// 
 
 		interfaceVie.setString("Point de Vie : " + to_string(player_trump.ptVie));
-		interfaceBrique.setString("Briques : " + to_string(briquesCount));
+		interfaceBrique.setString("Briques : " + to_string(briquesCount) + "/3");
 
 		/// Background ///
 		window.draw(sol);
@@ -519,32 +545,36 @@ int main()
 					tacos.setPosition(x * CaseTaille, y * CaseTaille);
 					window.draw(tacos);
 				}
+				else if (carte.niveaux[carte.niveau_actuel].decor[x][y] == "q") {
+					caisseDansLave.setPosition(x * CaseTaille, y * CaseTaille);
+					window.draw(caisseDansLave);
+				}
 				else if (carte.niveaux[carte.niveau_actuel].decor[x][y] == "h") {
 					chest.setPosition(x * CaseTaille, y * CaseTaille);
 					key.setPosition(x * CaseTaille, y * CaseTaille);
 					window.draw(chest);
-					if (briquesCount >= 3) { 
-						
+					if (briquesCount >= 3) {
+
 						if (haveKey == false) {
 							window.draw(key);
-							
+
 						}
 					}
 
 				}
 				else if (carte.niveaux[carte.niveau_actuel].decor[x][y] == "d") {
-					
+
 					if (haveKey == true)
 					{
-						door.setPosition(x* CaseTaille, y* CaseTaille);
+						door.setPosition(x * CaseTaille, y * CaseTaille);
 						window.draw(door);
 					}
-					
+
 				}
 			}
 		}
-		
-		
+
+
 		for (size_t i = 0; i < carte.niveaux[carte.niveau_actuel].boxx.size(); i++)
 		{
 			window.draw(carte.niveaux[carte.niveau_actuel].boxx[i]._Sprite);
@@ -552,6 +582,7 @@ int main()
 		}
 		///////////////////////// ENNEMIS //////////////////////
 #pragma region ennemis
+		//Pinatas
 		for (size_t i = 0; i < carte.niveaux[carte.niveau_actuel].Pinatas.size(); i++)
 		{
 			//if (carte.niveaux[carte.niveau_actuel].Pinatas[i].isMort == false && carte.niveaux[carte.niveau_actuel].Mexicans[i].isMort == false)
@@ -571,7 +602,7 @@ int main()
 		}
 
 
-
+		//Mexicains
 		for (size_t i = 0; i < carte.niveaux[carte.niveau_actuel].Mexicans.size(); i++)
 		{
 			window.draw(carte.niveaux[carte.niveau_actuel].Mexicans[i]._Sprite);
@@ -594,7 +625,7 @@ int main()
 		player_trump.update();
 		///////////////////////// FIN ENNEMIS //////////////////////
 
-
+		//affichage des hitboxs et des sprites du joueur
 		window.draw(player_trump.ghost);
 		window.draw(player_trump._Sprite);
 		window.draw(player_trump.satouch);

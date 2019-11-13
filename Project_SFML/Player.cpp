@@ -13,12 +13,12 @@ Player::Player(sf::Texture& TEMP_Trump)
 	_Sprite.setOrigin(50, 50);
 
 
-
+	//hitbox joueur
 	satouch.setSize(sf::Vector2f(_Sprite.getGlobalBounds().width - satouchMarge, _Sprite.getGlobalBounds().height - satouchMarge));
 	satouch.setOrigin(_Sprite.getOrigin().x - satouchMarge / 2, _Sprite.getOrigin().y - satouchMarge / 2);
 	satouch.setFillColor(sf::Color(0, 0, 255, 128));
 
-
+	//ghost joueur qui permet d'entrer en contact avec objet un peu avant que le sprite n'entre en collision avec l'objet
 	ghost.setSize(satouch.getSize());
 	//ghost.setOrigin(sf::Vector2f(satouch.getGlobalBounds().width / 2, satouch.getGlobalBounds().height / 2));
 	ghost.setOrigin(satouch.getOrigin());

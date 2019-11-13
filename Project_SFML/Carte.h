@@ -21,7 +21,7 @@ class Carte
 {
 public:
 	Carte();
-	vector<string> rawDecor;
+	vector<vector<string>> rawDecors;
 	bool tilemap_get_at_pixel(sf::Vector2i pos, bool bloqueSol);
 
 	vector<Niveau> niveaux;
