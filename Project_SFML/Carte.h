@@ -12,7 +12,9 @@ struct Niveau
 	vector<Box> boxx;
 	vector<Ennemis> Pinatas;
 	vector<Ennemis> Mexicans;
-
+	bool haveKey = false;
+	int briquesCount = 0;
+	int tweetCount = 20;
 };
 
 

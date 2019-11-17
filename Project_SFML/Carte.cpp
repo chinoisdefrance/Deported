@@ -68,7 +68,6 @@ Carte::Carte()
 			for (size_t x = 0; x < 8; x++)
 			{
 				niv.decor[x][y] = rawDecors[i][y][x];
-				cout << niv.decor[x][y];
 
 				if (niv.decor[x][y] == "c") {
 					box._Sprite.setPosition(x * 100, y * 100);
@@ -85,7 +84,6 @@ Carte::Carte()
 					niv.Mexicans.push_back(ennemis);
 				}
 			}
-			cout << endl;
 		}
 
 		niveaux.push_back(niv);

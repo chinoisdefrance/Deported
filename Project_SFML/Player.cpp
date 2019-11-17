@@ -79,7 +79,6 @@ void Player::update()
 {
 	if (haveTakeDamage == true) {
 
-		cout << "update " << endl;
 		if (_ClockInvincible.getElapsedTime().asSeconds() >= 0.5)
 		{
 			invincible = false;
