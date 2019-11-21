@@ -42,13 +42,13 @@ Carte::Carte()
 	rawDecors.push_back(rawDecor);
 	vector<string> rawDecor1 = {
 		"ffffffff",
-		"f_____df",
-		"f______f",
-		"f_____hf",
-		"f_c____f",
-		"f_p____f",
-		"f_c_t__f",
-		"ft_p___f",
+		"fmbt__df",
+		"fll____f",
+		"fpl_c__f",
+		"fbl___pf",
+		"f_l_c__f",
+		"fll_t_bf",
+		"fm____hf",
 		"ffffffff",
 	};
 

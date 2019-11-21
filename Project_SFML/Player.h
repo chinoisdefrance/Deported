@@ -36,7 +36,8 @@ public:
 	void moveDown(int);
 	void moveRight(int);
 	void moveLeft(int);
-	void setSpeed(float, sf::Time);
+	void move(float xx, float yy);
+	void setSpeed(float);
 
 
 	int direction_H;

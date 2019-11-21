@@ -26,11 +26,11 @@ int main()
 	int horizontal = 0;
 	int vertical = 0;
 
-
+	
 	int ancien_horizontal = -1;
 	int ancien_vertical = 0;
 
-
+	float speed = 0;
 
 
 	sf::Vector2f playerCenter;
@@ -273,6 +273,8 @@ int main()
 	}
 	Player player_trump(playerTexture);
 	player_trump._Sprite.setPosition(400, 450);
+	//speed = 80.f;
+	player_trump.setSpeed(1);
 #pragma endregion
 
 #pragma region menu
@@ -537,7 +539,7 @@ int main()
 
 				if (boitebloquee == false && collisionBoxBetween == false) {
 					//deplacement du joueur
-					player_trump._Sprite.move(horizontal * 0.20, vertical * 0.20);
+					player_trump.move(horizontal , vertical );
 				}
 				int xx = player_trump._Sprite.getPosition().x / 100;
 				int yy = player_trump._Sprite.getPosition().y / 100;

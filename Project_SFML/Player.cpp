@@ -104,8 +104,14 @@ void Player::inputs(int hori, int verti)
 
 
 
-void Player::setSpeed(float TEMP_Speed, sf::Time TEMP_AnimTime)
+void Player::move(float xx, float yy)
 {
-	_Speed = TEMP_Speed;
-	_AnimTime = TEMP_AnimTime;
+
+	_Sprite.move(_Speed * xx, _Speed * yy);
+}
+
+void Player::setSpeed(float _Speed)
+{
+	this->_Speed = _Speed;
+	
 }
