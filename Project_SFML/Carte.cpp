@@ -62,7 +62,7 @@ Carte::Carte()
 		box._Sprite.setTexture(boxTexture);
 
 		Ennemis ennemis;
-
+		niv.coffreOuvert = false;
 		for (size_t y = 0; y < 9; y++)
 		{
 			for (size_t x = 0; x < 8; x++)

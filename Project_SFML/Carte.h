@@ -15,6 +15,7 @@ struct Niveau
 	bool haveKey = false;
 	int briquesCount = 0;
 	int tweetCount = 20;
+	bool coffreOuvert;
 };
 
 

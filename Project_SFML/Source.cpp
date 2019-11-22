@@ -22,11 +22,12 @@ int main()
 	const int CaseTaille = 100;
 
 	bool invincible;
+	bool havePlaySound = false;
 
 	int horizontal = 0;
 	int vertical = 0;
 
-	
+
 	int ancien_horizontal = -1;
 	int ancien_vertical = 0;
 
@@ -39,7 +40,7 @@ int main()
 
 	//Définir dimensions fenêtre et musique)
 
-	sf::RenderWindow window(sf::VideoMode(800, 900), "SFML works!");
+	sf::RenderWindow window(sf::VideoMode(800, 900), "DEPORTED");
 	window.setKeyRepeatEnabled(false);
 	sf::Music music;
 	sf::Clock clockInvincible;
@@ -60,8 +61,8 @@ int main()
 	sf::Sprite screenEnd;
 	sf::Sprite bouton_start;
 	sf::Sprite bouton_credits;
-	sf::Sprite bouton_quitter;
-	sf::Sprite bouton_restart;
+	sf::Sprite bouton_retour;
+	sf::Sprite ecranCredits;
 
 	//Définir textures 
 
@@ -74,6 +75,7 @@ int main()
 	sf::Texture chestCloseTexture;
 	sf::Texture doorOpenTexture;
 	sf::Texture doorCloseTexture;
+
 
 	//joueur
 	sf::Texture playerTexture;
@@ -94,12 +96,13 @@ int main()
 	sf::Texture menuTexture;
 	sf::Texture screenEndTexture;
 	sf::Texture gameOverEcranTexture;
+	sf::Texture ecranCreditsTexture;
 
 	//boutons
 	sf::Texture bouton_startTexture;
 	sf::Texture bouton_creditsTexture;
-	sf::Texture bouton_restartTexture;
-	sf::Texture bouton_quitterTexture;
+	sf::Texture bouton_retourTexture;
+
 
 	//Rechercher textures dans doc
 
@@ -137,12 +140,12 @@ int main()
 	menuTexture.loadFromFile("menu.jpg");
 	screenEndTexture.loadFromFile("end.jpg");
 	gameOverEcranTexture.loadFromFile("gameover.jpg");
+	ecranCreditsTexture.loadFromFile("ecran_credits.jpg");
 
 	//boutons
 	bouton_creditsTexture.loadFromFile("button_credits.png");
-	bouton_quitterTexture.loadFromFile("button_quitter.png");
 	bouton_startTexture.loadFromFile("button_start.png");
-	bouton_restartTexture.loadFromFile("button_restart.png");
+	bouton_retourTexture.loadFromFile("button_retour.png");
 
 	//SONS//
 
@@ -151,13 +154,13 @@ int main()
 	sf::SoundBuffer eatSoundBuffer;
 	sf::SoundBuffer shootTweetSoundBuffer;
 	sf::SoundBuffer keySoundBuffer;
-	sf::SoundBuffer winSoundBuffer;
 	sf::SoundBuffer gameOverSoundBuffer;
 	sf::SoundBuffer deathPinataSoundBuffer;
 	sf::SoundBuffer deathMexicanSoundBuffer;
 	sf::SoundBuffer takeDamageSoundBuffer;
 	sf::SoundBuffer openChestSoundBuffer;
-	
+	sf::SoundBuffer endSoundBuffer;
+
 	//LOAD SONS
 
 	if (!eatSoundBuffer.loadFromFile("eat.ogg"))
@@ -181,6 +184,12 @@ int main()
 	if (!takeDamageSoundBuffer.loadFromFile("takeDamage.ogg"))
 	{
 	}
+	if (!openChestSoundBuffer.loadFromFile("openChest.ogg"))
+	{
+	}
+	if (!endSoundBuffer.loadFromFile("America fuck yeah.ogg"))
+	{
+	}
 
 	//Sound
 
@@ -192,7 +201,7 @@ int main()
 	sf::Sound soundMexican;
 	sf::Sound soundTakeDamage;
 	sf::Sound soundOpenChest;
-	sf::Sound soundWin;
+	sf::Sound soundEnd;
 
 	//Sounds assignés
 
@@ -204,7 +213,7 @@ int main()
 	soundMexican.setBuffer(deathMexicanSoundBuffer);
 	soundTakeDamage.setBuffer(takeDamageSoundBuffer);
 	soundOpenChest.setBuffer(openChestSoundBuffer);
-	soundWin.setBuffer(winSoundBuffer);
+	soundEnd.setBuffer(endSoundBuffer);
 
 	//MUSIC//
 
@@ -229,9 +238,9 @@ int main()
 	menu.setTexture(menuTexture);
 	gameOverEcran.setTexture(gameOverEcranTexture);
 	screenEnd.setTexture(screenEndTexture);
+	ecranCredits.setTexture(ecranCreditsTexture);
 	bouton_credits.setTexture(bouton_creditsTexture);
-	bouton_quitter.setTexture(bouton_quitterTexture);
-	bouton_restart.setTexture(bouton_restartTexture);
+	bouton_retour.setTexture(bouton_retourTexture);
 	bouton_start.setTexture(bouton_startTexture);
 
 #pragma region interface
@@ -279,7 +288,7 @@ int main()
 	Player player_trump(playerTexture);
 	player_trump._Sprite.setPosition(400, 450);
 	//speed = 80.f;
-	player_trump.setSpeed(1);
+	player_trump.setSpeed(.8);
 #pragma endregion
 
 #pragma region menu
@@ -367,6 +376,7 @@ int main()
 					}
 					else if (selection == 1) {
 						cout << "bouton_credits" << endl;
+						etat = 2;
 					}
 				}
 			}
@@ -394,6 +404,72 @@ int main()
 
 			//window.draw(bouton_quitter);
 #pragma endregion
+			break;
+		case 2://crédits
+
+			bouton_retour.setPosition(10, window.getSize().y - 160);
+			bouton_retour.setScale(0.8f, 0.8f);
+
+			if (clockKeyPress.getElapsedTime().asSeconds() > .25f)
+			{
+
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
+				{
+					clockKeyPress.restart();
+					etat = 0;
+					selection = 0;
+				}
+			}
+			brique.setPosition(5, window.getSize().y - 90);
+
+			window.draw(ecranCredits);
+			window.draw(bouton_retour);
+			window.draw(brique);
+			break;
+
+		case 3://gameOver
+			bouton_retour.setPosition(320, window.getSize().y - 120);
+			bouton_retour.setScale(0.6f, 0.6f);
+			
+
+			if (havePlaySound == false)
+			{
+				
+				soundGameOver.play();
+				havePlaySound = true;
+			}
+
+			if (clockKeyPress.getElapsedTime().asSeconds() > .25f)
+			{
+
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
+				{
+					clockKeyPress.restart();
+					etat = 0;
+					selection = 0;
+				}
+			}
+			brique.setPosition(280, window.getSize().y - 90);
+			
+
+			window.draw(gameOverEcran);
+			window.draw(bouton_retour);
+			window.draw(brique);
+			break;
+
+		case 4://fin
+
+			if (havePlaySound == false)
+			{
+				music.stop();
+				soundEnd.play();
+				soundEnd.setVolume(3.f);
+				havePlaySound = true;
+			}
+
+			window.draw(screenEnd);
+			
+			//
 			break;
 		case 1: // jeu
 #pragma region jeu
@@ -479,17 +555,17 @@ int main()
 
 			///////////////////////// FIN KEYPRESS ///////////////////////// 
 			///////////////////////// UPDATE /////////////////////////
-			bool coffreOuvert = false;
+
 
 			//coffre 
 			if (carte.niveaux[carte.niveau_actuel].briquesCount == 3)
 			{
-				coffreOuvert = true;
 				chest.setTexture(chestOpenTexture);
-				soundKey.play();
-				soundOpenChest.play();
-
-
+				if (carte.niveaux[carte.niveau_actuel].coffreOuvert == false) {
+					soundKey.play();
+					soundOpenChest.play();
+				}
+				carte.niveaux[carte.niveau_actuel].coffreOuvert = true;
 			}
 			else if (carte.niveaux[carte.niveau_actuel].briquesCount < 3)
 			{
@@ -544,7 +620,7 @@ int main()
 
 				if (boitebloquee == false && collisionBoxBetween == false) {
 					//deplacement du joueur
-					player_trump.move(horizontal , vertical );
+					player_trump.move(horizontal, vertical);
 				}
 				int xx = player_trump._Sprite.getPosition().x / 100;
 				int yy = player_trump._Sprite.getPosition().y / 100;
@@ -567,18 +643,26 @@ int main()
 				//hamburger
 				else if (case_actuelle == "h")
 				{
-					//window.draw(door_open),
-					carte.niveaux[carte.niveau_actuel].haveKey = true;
-					soundEat.play();
+					if (carte.niveaux[carte.niveau_actuel].coffreOuvert) {
+						carte.niveaux[carte.niveau_actuel].haveKey = true;
+						soundEat.play();
 
 
-					//carte.niveaux[carte.niveau_actuel].decor[xx][yy] = "_";
+						//carte.niveaux[carte.niveau_actuel].decor[xx][yy] = "_";
+					}
 				}
 				else if (case_actuelle == "d")
 				{
-					//if (carte.niveau_actuel < carte.niveaux.size()) {
-					carte.niveau_actuel = 1;
-					//}
+					if (carte.niveaux[carte.niveau_actuel].haveKey) {
+						if (carte.niveau_actuel == 0)
+						{
+							carte.niveau_actuel = 1;
+						}
+						else 
+						{
+							etat = 4;
+						}
+					}
 				}
 
 
@@ -588,8 +672,8 @@ int main()
 			//marcher sur lave grâce à caisses
 			for (size_t i = 0; i < carte.niveaux[carte.niveau_actuel].boxx.size(); i++)
 			{
-				int xx = carte.niveaux[carte.niveau_actuel].boxx[i]._Sprite.getPosition().x / 100;
-				int yy = carte.niveaux[carte.niveau_actuel].boxx[i]._Sprite.getPosition().y / 100;
+				int xx = (carte.niveaux[carte.niveau_actuel].boxx[i]._Sprite.getPosition().x + 50) / 100;
+				int yy = (carte.niveaux[carte.niveau_actuel].boxx[i]._Sprite.getPosition().y + 50) / 100;
 				case_actuelle = carte.niveaux[carte.niveau_actuel].decor[xx][yy];
 				if (case_actuelle == "l")
 				{
@@ -614,26 +698,26 @@ int main()
 			// écran game over
 			if (player_trump.gameOver == true)
 			{
-				player_trump._Sprite.setTexture(dieTexture);
+				//player_trump._Sprite.setTexture(dieTexture);
 
-				if (player_trump.screenGameOver == false)
-				{
-					player_trump.screenGameOver = true;
-					player_trump.ClockDeath.restart();
-					soundGameOver.play();
+				//if (player_trump.screenGameOver == false)
+				//{
+				//	player_trump.screenGameOver = true;
+				//	player_trump.ClockDeath.restart();
+				//	soundGameOver.play();
 
-				}
-				else {
+				//}
+				//else {
 
-					player_trump.screenGameOver = true;
-					if (player_trump.ClockDeath.getElapsedTime().asSeconds() >= 1)
-					{
+				//	player_trump.screenGameOver = true;
+				//	if (player_trump.ClockDeath.getElapsedTime().asSeconds() >= 1)
+				//	{
 
-						music.stop();
-					}
-				}
-				//cout << "T'as PERDU !!!" << endl;
-
+				//		music.stop();
+				//	}
+				//}
+				////cout << "T'as PERDU !!!" << endl;
+				etat = 3;
 			}
 			playerCenter = sf::Vector2f(player_trump._Sprite.getPosition().x, player_trump._Sprite.getPosition().y);
 
@@ -856,6 +940,8 @@ int main()
 
 #pragma endregion
 			break;
+
+
 		}
 		window.display();
 
