@@ -151,12 +151,13 @@ int main()
 	sf::SoundBuffer eatSoundBuffer;
 	sf::SoundBuffer shootTweetSoundBuffer;
 	sf::SoundBuffer keySoundBuffer;
-	//::SoundBuffer eatSoundBuffer;
+	sf::SoundBuffer winSoundBuffer;
 	sf::SoundBuffer gameOverSoundBuffer;
 	sf::SoundBuffer deathPinataSoundBuffer;
 	sf::SoundBuffer deathMexicanSoundBuffer;
 	sf::SoundBuffer takeDamageSoundBuffer;
-
+	sf::SoundBuffer openChestSoundBuffer;
+	
 	//LOAD SONS
 
 	if (!eatSoundBuffer.loadFromFile("eat.ogg"))
@@ -190,6 +191,8 @@ int main()
 	sf::Sound soundPinata;
 	sf::Sound soundMexican;
 	sf::Sound soundTakeDamage;
+	sf::Sound soundOpenChest;
+	sf::Sound soundWin;
 
 	//Sounds assignés
 
@@ -200,6 +203,8 @@ int main()
 	soundPinata.setBuffer(deathPinataSoundBuffer);
 	soundMexican.setBuffer(deathMexicanSoundBuffer);
 	soundTakeDamage.setBuffer(takeDamageSoundBuffer);
+	soundOpenChest.setBuffer(openChestSoundBuffer);
+	soundWin.setBuffer(winSoundBuffer);
 
 	//MUSIC//
 
@@ -482,7 +487,7 @@ int main()
 				coffreOuvert = true;
 				chest.setTexture(chestOpenTexture);
 				soundKey.play();
-
+				soundOpenChest.play();
 
 
 			}
