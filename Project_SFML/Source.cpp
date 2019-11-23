@@ -187,7 +187,7 @@ int main()
 	if (!openChestSoundBuffer.loadFromFile("openChest.ogg"))
 	{
 	}
-	if (!endSoundBuffer.loadFromFile("America fuck yeah.ogg"))
+	if (!endSoundBuffer.loadFromFile("america.ogg"))
 	{
 	}
 
