@@ -2,17 +2,17 @@
 
 Carte::Carte()
 {
-	if (!boxTexture.loadFromFile("box.png"))
+	if (!boxTexture.loadFromFile("images/box.png"))
 	{
 		cout << "Texture error" << endl;
 	}
 
-	if (!pinataTexture.loadFromFile("pinata.png"))
+	if (!pinataTexture.loadFromFile("images/pinata.png"))
 	{
 		cout << "Texture error" << endl;
 	}
 
-	if (!mexicanTexture.loadFromFile("mexican.png"))
+	if (!mexicanTexture.loadFromFile("images/mexican.png"))
 	{
 		cout << "Texture error" << endl;
 	}

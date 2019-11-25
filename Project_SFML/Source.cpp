@@ -107,45 +107,45 @@ int main()
 	//Rechercher textures dans doc
 
 	//texture décor 
-	solTexture.loadFromFile("sable.jpg");
-	cactusTexture.loadFromFile("cactus.png");
-	laveTexture.loadFromFile("lave.jpg");
-	caisseDansLaveTexture.loadFromFile("chemin_lave.png");
+	solTexture.loadFromFile("images/sable.jpg");
+	cactusTexture.loadFromFile("images/cactus.png");
+	laveTexture.loadFromFile("images/lave.jpg");
+	caisseDansLaveTexture.loadFromFile("images/chemin_lave.png");
 
 	//projectile trump
-	t_projectile.loadFromFile("twitter.png");
+	t_projectile.loadFromFile("images/twitter.png");
 
 	//texture ennemis vaincus
-	pinata_brokenTexture.loadFromFile("broken-pinata.png");
-	hatTexture.loadFromFile("mexican_hat.png");
+	pinata_brokenTexture.loadFromFile("images/broken-pinata.png");
+	hatTexture.loadFromFile("images/mexican_hat.png");
 
 	//sprites texture trump
-	attackTexture.loadFromFile("trump_attack.png");
-	//stuntTexture.loadFromFile("trump_stunt.png");
-	dieTexture.loadFromFile("dying_trump.png");
+	attackTexture.loadFromFile("images/trump_attack.png");
+	//stuntTexture.loadFromFile("images/trump_stunt.png");
+	dieTexture.loadFromFile("images/dying_trump.png");
 
 	//coffre texture
-	chestOpenTexture.loadFromFile("chest_open.png");
-	chestCloseTexture.loadFromFile("chest_close.png");
+	chestOpenTexture.loadFromFile("images/chest_open.png");
+	chestCloseTexture.loadFromFile("images/chest_close.png");
 
 	//clés texture dans coffre
-	keyTexture.loadFromFile("hamburger.png");
+	keyTexture.loadFromFile("images/hamburger.png");
 	key.setTexture(keyTexture);
 
 	//porte texture
-	doorOpenTexture.loadFromFile("door_open.png");
-	doorCloseTexture.loadFromFile("door_close.png");
+	doorOpenTexture.loadFromFile("images/door_open.png");
+	doorCloseTexture.loadFromFile("images/door_close.png");
 
 	//écrans
-	menuTexture.loadFromFile("menu.jpg");
-	screenEndTexture.loadFromFile("end.jpg");
-	gameOverEcranTexture.loadFromFile("gameover.jpg");
-	ecranCreditsTexture.loadFromFile("ecran_credits.jpg");
+	menuTexture.loadFromFile("images/menu.jpg");
+	screenEndTexture.loadFromFile("images/end.jpg");
+	gameOverEcranTexture.loadFromFile("images/gameover.jpg");
+	ecranCreditsTexture.loadFromFile("images/ecran_credits.jpg");
 
 	//boutons
-	bouton_creditsTexture.loadFromFile("button_credits.png");
-	bouton_startTexture.loadFromFile("button_start.png");
-	bouton_retourTexture.loadFromFile("button_retour.png");
+	bouton_creditsTexture.loadFromFile("images/button_credits.png");
+	bouton_startTexture.loadFromFile("images/button_start.png");
+	bouton_retourTexture.loadFromFile("images/button_retour.png");
 
 	//SONS//
 
@@ -163,31 +163,31 @@ int main()
 
 	//LOAD SONS
 
-	if (!eatSoundBuffer.loadFromFile("eat.ogg"))
+	if (!eatSoundBuffer.loadFromFile("ogg/eat.ogg"))
 	{
 	}
-	if (!shootTweetSoundBuffer.loadFromFile("shootTweet.ogg"))
+	if (!shootTweetSoundBuffer.loadFromFile("ogg/shootTweet.ogg"))
 	{
 	}
-	if (!keySoundBuffer.loadFromFile("key.ogg"))
+	if (!keySoundBuffer.loadFromFile("ogg/key.ogg"))
 	{
 	}
-	if (!gameOverSoundBuffer.loadFromFile("gameOver.ogg"))
+	if (!gameOverSoundBuffer.loadFromFile("ogg/gameOver.ogg"))
 	{
 	}
-	if (!deathPinataSoundBuffer.loadFromFile("deathPinata.ogg"))
+	if (!deathPinataSoundBuffer.loadFromFile("ogg/deathPinata.ogg"))
 	{
 	}
-	if (!deathMexicanSoundBuffer.loadFromFile("deathMexican.ogg"))
+	if (!deathMexicanSoundBuffer.loadFromFile("ogg/deathMexican.ogg"))
 	{
 	}
-	if (!takeDamageSoundBuffer.loadFromFile("takeDamage.ogg"))
+	if (!takeDamageSoundBuffer.loadFromFile("ogg/takeDamage.ogg"))
 	{
 	}
-	if (!openChestSoundBuffer.loadFromFile("openChest.ogg"))
+	if (!openChestSoundBuffer.loadFromFile("ogg/openChest.ogg"))
 	{
 	}
-	if (!endSoundBuffer.loadFromFile("america.ogg"))
+	if (!endSoundBuffer.loadFromFile("ogg/america.ogg"))
 	{
 	}
 
@@ -217,7 +217,7 @@ int main()
 
 	//MUSIC//
 
-	if (!music.openFromFile("Jarabes.ogg"))
+	if (!music.openFromFile("ogg/Jarabes.ogg"))
 	{
 
 	}
@@ -281,7 +281,7 @@ int main()
 #pragma endregion
 
 #pragma region player
-	if (!playerTexture.loadFromFile("happy_trump.png"))
+	if (!playerTexture.loadFromFile("images/happy_trump.png"))
 	{
 		cout << "Texture error" << endl;
 	}
@@ -298,7 +298,7 @@ int main()
 	///////////////////////// VECTOR ///////////////////////// 
 	///////////////////////// COLLECTABLES ///////////////////
 
-	if (!tacosTexture.loadFromFile("tacotrump.png"))
+	if (!tacosTexture.loadFromFile("images/tacotrump.png"))
 	{
 		cout << "Texture error" << endl;
 	}
@@ -306,7 +306,7 @@ int main()
 	sf::Sprite tacos;
 
 	tacos.setTexture(tacosTexture);
-	if (!briqueTexture.loadFromFile("brique.png"))
+	if (!briqueTexture.loadFromFile("images/brique.png"))
 	{
 		cout << "Texture error" << endl;
 	}

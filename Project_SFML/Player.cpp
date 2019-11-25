@@ -4,7 +4,7 @@ Player::Player(sf::Texture& TEMP_Trump)
 {
 	_Sprite.setTexture(TEMP_Trump);
 
-	if (!stuntTexture.loadFromFile("trump_stunt.png"))
+	if (!stuntTexture.loadFromFile("images/trump_stunt.png"))
 	{
 		cout << "Texture error" << endl;
 	}
