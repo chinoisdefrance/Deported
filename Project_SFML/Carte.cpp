@@ -2,21 +2,24 @@
 
 Carte::Carte()
 {
+//assignement de textures pour les tableaux de vecteur
+	//texture box
 	if (!boxTexture.loadFromFile("images/box.png"))
 	{
 		cout << "Texture error" << endl;
 	}
-
+	//texture pinatas
 	if (!pinataTexture.loadFromFile("images/pinata.png"))
 	{
 		cout << "Texture error" << endl;
 	}
-
+	//texture mexicains
 	if (!mexicanTexture.loadFromFile("images/mexican.png"))
 	{
 		cout << "Texture error" << endl;
 	}
 
+//lettres assignés aux éléments du décor
 
 	// f pour mur
 	// l pour lave
@@ -27,6 +30,8 @@ Carte::Carte()
 	// m pour mexicans
 	// h pour coffre
 	// d pour door
+
+	//premier niveau
 	vector<string> rawDecor = {
 		"ffffffff",
 		"f_b__mdf",
@@ -38,7 +43,7 @@ Carte::Carte()
 		"ft_p__bf",
 		"ffffffff",
 	};
-
+	//deuxième niveau
 	rawDecors.push_back(rawDecor);
 	vector<string> rawDecor1 = {
 		"ffffffff",
@@ -53,6 +58,7 @@ Carte::Carte()
 	};
 
 	rawDecors.push_back(rawDecor1);
+	//permet de changer de niveau, d'afficher les différents niveaux
 	for (size_t i = 0; i < rawDecors.size(); i++)
 	{
 
@@ -68,16 +74,18 @@ Carte::Carte()
 			for (size_t x = 0; x < 8; x++)
 			{
 				niv.decor[x][y] = rawDecors[i][y][x];
-
+				//boxs
 				if (niv.decor[x][y] == "c") {
 					box._Sprite.setPosition(x * 100, y * 100);
 					niv.boxx.push_back(box);
 				}
+				//pinatas
 				else if (niv.decor[x][y] == "p") {
 					ennemis._Sprite.setTexture(pinataTexture);
 					ennemis._Sprite.setPosition(x * 100, y * 100);
 					niv.Pinatas.push_back(ennemis);
 				}
+				//mexicains
 				else if (niv.decor[x][y] == "m") {
 					ennemis._Sprite.setTexture(mexicanTexture);
 					ennemis._Sprite.setPosition(x * 100, y * 100);
@@ -89,7 +97,7 @@ Carte::Carte()
 		niveaux.push_back(niv);
 	}
 }
-
+//le joueur est bloqué par certains éléments du décor
 bool Carte::tilemap_get_at_pixel(sf::Vector2i pos, bool bloqueSol = false)
 {
 	sf::Vector2i tile;

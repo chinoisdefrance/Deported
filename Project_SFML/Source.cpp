@@ -315,10 +315,7 @@ int main()
 	brique.setTexture(briqueTexture);
 	///////////////////////// FIN COLLECTABLES ///////////////////
 
-
-
-
-
+	///////////////////////// DEBUT DU WHILE ///////////////////
 
 	while (window.isOpen())
 	{
@@ -337,6 +334,8 @@ int main()
 
 		window.clear();
 
+		//switch permettant de constuire les différents menus et de naviguer entre eux
+
 		switch (etat)
 		{
 		case 0:
@@ -345,7 +344,7 @@ int main()
 			///////////////////////// KEYPRESS ///////////////////////////////////////////////////////////////
 			if (clockKeyPress.getElapsedTime().asSeconds() > .25f)
 			{
-
+				//touches assignées pour aller d'un bouton à l'autre
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 				{
 					clockKeyPress.restart();
@@ -364,11 +363,11 @@ int main()
 					}
 				}
 
-
+				//touche assignée pour sélectionner un choisir un bouton
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
 				{
 					clockKeyPress.restart();
-
+					//deux choix possibles
 					if (selection == 0) {
 						etat = 1;
 						cout << "bouton_start" << endl;
@@ -431,14 +430,14 @@ int main()
 			bouton_retour.setPosition(320, window.getSize().y - 120);
 			bouton_retour.setScale(0.6f, 0.6f);
 			
-
+			//jouer la musique de l'écran game over
 			if (havePlaySound == false)
 			{
 				
 				soundGameOver.play();
 				havePlaySound = true;
 			}
-
+			//temps de latence quand le joueur passe d'un bouton à l'autre
 			if (clockKeyPress.getElapsedTime().asSeconds() > .25f)
 			{
 
@@ -451,14 +450,14 @@ int main()
 			}
 			brique.setPosition(280, window.getSize().y - 90);
 			
-
+			//affichage de l'écran game over, du bouton et de la brique qui montre que l'on a sélectionné un bouton
 			window.draw(gameOverEcran);
 			window.draw(bouton_retour);
 			window.draw(brique);
 			break;
 
 		case 4://fin
-
+			//musique de fin se lance et son volume est choisi ici, la musique du jeu s'arrête
 			if (havePlaySound == false)
 			{
 				music.stop();
@@ -466,7 +465,7 @@ int main()
 				soundEnd.setVolume(3.f);
 				havePlaySound = true;
 			}
-
+			//affichage de l'écran de fin
 			window.draw(screenEnd);
 			
 			//
@@ -492,12 +491,13 @@ int main()
 			}
 
 			//TIR
-
+			//touche dédié au tir
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 			{
-
+				
 				if (player_trump.tweetTime)
 				{
+					//compteur de tweet, sprite du joueur change quand il tire, son de tire est joué
 					if (carte.niveaux[carte.niveau_actuel].tweetCount > 0) {
 						Projectile project(player_trump._Sprite.getPosition().x, player_trump._Sprite.getPosition().y, ancien_horizontal, ancien_vertical);
 						project.sprite.setTexture(t_projectile);
@@ -518,36 +518,34 @@ int main()
 			vertical = 0;
 
 			//DEPLACEMENTS JOUEUR
-
+			//quand le joueur n'a plus de points de vie, il ne peut plus bouger
 			if (player_trump.gameOver == false)
 			{
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 				{
 					horizontal = -1;
 					player_trump._Sprite.setScale(1, 1);
-					//player_trump.moveLeft(horizontal);
+					
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 				{
 					horizontal = 1;
 					player_trump._Sprite.setScale(-1, 1);
-					//player_trump.moveRight(horizontal);
+					
 
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 				{
 					vertical = -1;
-					//player_trump.moveUp(vertical);
+					
 
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 				{
 					vertical = 1;
-					//player_trump.moveDown(vertical);
+					
 
 				}
-
-
 
 				player_trump.inputs(horizontal, vertical);
 			}
@@ -557,7 +555,8 @@ int main()
 			///////////////////////// UPDATE /////////////////////////
 
 
-			//coffre 
+			//coffre
+			//si le joueur a ramassé toutes les briques, le coffre s'ouvre, le son du coffre et de la clé sont joués
 			if (carte.niveaux[carte.niveau_actuel].briquesCount == 3)
 			{
 				chest.setTexture(chestOpenTexture);
@@ -567,6 +566,7 @@ int main()
 				}
 				carte.niveaux[carte.niveau_actuel].coffreOuvert = true;
 			}
+			//si le joueur n'a pas récupéré toutes les briques, le coffre reste fermé
 			else if (carte.niveaux[carte.niveau_actuel].briquesCount < 3)
 			{
 				chest.setTexture(chestCloseTexture);
@@ -651,13 +651,16 @@ int main()
 						//carte.niveaux[carte.niveau_actuel].decor[xx][yy] = "_";
 					}
 				}
+				//porte
 				else if (case_actuelle == "d")
 				{
+					//si le joueur prend la clé il pourra changer de niveau et la porte s'ouvrira, sinon elle reste fermée
 					if (carte.niveaux[carte.niveau_actuel].haveKey) {
 						if (carte.niveau_actuel == 0)
 						{
 							carte.niveau_actuel = 1;
 						}
+						//dans le menu
 						else 
 						{
 							etat = 4;
@@ -698,55 +701,38 @@ int main()
 			// écran game over
 			if (player_trump.gameOver == true)
 			{
-				//player_trump._Sprite.setTexture(dieTexture);
-
-				//if (player_trump.screenGameOver == false)
-				//{
-				//	player_trump.screenGameOver = true;
-				//	player_trump.ClockDeath.restart();
-				//	soundGameOver.play();
-
-				//}
-				//else {
-
-				//	player_trump.screenGameOver = true;
-				//	if (player_trump.ClockDeath.getElapsedTime().asSeconds() >= 1)
-				//	{
-
-				//		music.stop();
-				//	}
-				//}
-				////cout << "T'as PERDU !!!" << endl;
+				//dans le menu
 				etat = 3;
 			}
 			playerCenter = sf::Vector2f(player_trump._Sprite.getPosition().x, player_trump._Sprite.getPosition().y);
 
 
 			// Projectile Vs pinata
+			//tableau de vecteur de projectiles
 			for (size_t i = 0; i < projectiles.size(); i++)
 			{
 				projectiles[i].update();
 			}
+			//le tableau de vecteur d'ennemis (qui les affichent sur la carte)
 			for (size_t y = 0; y < carte.niveaux[carte.niveau_actuel].Pinatas.size(); y++)
 			{
 				for (size_t i = 0; i < projectiles.size(); i++)
 				{
-
-
-
+					//les ennemis prennent des dégâts quand ils sont touchés par les projectiles du joueur
 					if (carte.niveaux[carte.niveau_actuel].Pinatas[y].ennemisHaveTakeDamage == false)
 					{
 						if (projectiles[i].sprite.getGlobalBounds().intersects(carte.niveaux[carte.niveau_actuel].Pinatas[y]._Sprite.getGlobalBounds()))
 						{
-
+							//un son est lancé quand les ennemis sont touchés par les projectiles
 							carte.niveaux[carte.niveau_actuel].Pinatas[y].ennemisTakeDamage(1);
 							soundPinata.play();
-
+							//les pinatas changent de sprite quand elles n'ont plus de point de vie
 							if (carte.niveaux[carte.niveau_actuel].Pinatas[y].ptVieEnnemis <= 0)
 							{
 
 								carte.niveaux[carte.niveau_actuel].Pinatas[y]._Sprite.setTexture(pinata_brokenTexture);
 							}
+							//les projectiles disparaissent si elles touchent un ennemi
 							projectiles.erase(projectiles.begin() + i);
 							continue;
 						}
@@ -756,25 +742,27 @@ int main()
 
 
 			// Projectile Vs mexican
-
+			//le tableau de vecteur d'ennemis (qui les affichent sur la carte)
 			for (size_t y = 0; y < carte.niveaux[carte.niveau_actuel].Mexicans.size(); y++)
 			{
 				for (size_t i = 0; i < projectiles.size(); i++)
 				{
-
+					//les ennemis prennent des dégâts quand ils sont touchés par les projectiles du joueur
 					if (carte.niveaux[carte.niveau_actuel].Mexicans[y].ennemisHaveTakeDamage == false)
 					{
+						//un son est lancé quand les ennemis sont touchés par les projectiles
 						if (projectiles[i].sprite.getGlobalBounds().intersects(carte.niveaux[carte.niveau_actuel].Mexicans[y]._Sprite.getGlobalBounds()))
 						{
 
 							carte.niveaux[carte.niveau_actuel].Mexicans[y].ennemisTakeDamage(1);
 							soundMexican.play();
-
+							//les mexicains changent de sprite quand elles n'ont plus de point de vie
 							if (carte.niveaux[carte.niveau_actuel].Mexicans[y].ptVieEnnemis <= 0)
 							{
 
 								carte.niveaux[carte.niveau_actuel].Mexicans[y]._Sprite.setTexture(hatTexture);
 							}
+							//les projectiles disparaissent si elles touchent un ennemi
 							projectiles.erase(projectiles.begin() + i);
 							continue;
 						}
@@ -782,7 +770,7 @@ int main()
 				}
 			}
 
-			// Projectile contre bord de l'ecran
+			// Projectiles s'effacent quand ils rencontrent le bord de l'écran
 
 			for (size_t i = 0; i < projectiles.size(); i++)
 			{
@@ -806,35 +794,42 @@ int main()
 
 			/// Background ///
 			window.draw(sol);
-
+			//tableaux de vecteurs des cases horizontales et verticales qui composent la carte
 			for (size_t y = 0; y < 9; y++)
 			{
 				for (size_t x = 0; x < 8; x++)
 				{
+					//cactus
 					if (carte.niveaux[carte.niveau_actuel].decor[x][y] == "f") {
 						cactus.setPosition(x * CaseTaille, y * CaseTaille);
 						window.draw(cactus);
 					}
+					//lave
 					else if (carte.niveaux[carte.niveau_actuel].decor[x][y] == "l") {
 						lave.setPosition(x * CaseTaille, y * CaseTaille);
 						window.draw(lave);
 					}
+					//briques
 					else if (carte.niveaux[carte.niveau_actuel].decor[x][y] == "b") {
 						brique.setPosition(x * CaseTaille, y * CaseTaille);
 						window.draw(brique);
 					}
+					//tacos
 					else if (carte.niveaux[carte.niveau_actuel].decor[x][y] == "t") {
 						tacos.setPosition(x * CaseTaille, y * CaseTaille);
 						window.draw(tacos);
 					}
+					//caisses dans la lave
 					else if (carte.niveaux[carte.niveau_actuel].decor[x][y] == "q") {
 						caisseDansLave.setPosition(x * CaseTaille, y * CaseTaille);
 						window.draw(caisseDansLave);
 					}
+					//coffre avec clé dans le coffre
 					else if (carte.niveaux[carte.niveau_actuel].decor[x][y] == "h") {
 						chest.setPosition(x * CaseTaille, y * CaseTaille);
 						key.setPosition(x * CaseTaille, y * CaseTaille);
 						window.draw(chest);
+						//afficher la clé si le joueur a récupéré toutes les briques
 						if (carte.niveaux[carte.niveau_actuel].briquesCount >= 3) {
 
 							if (carte.niveaux[carte.niveau_actuel].haveKey == false) {
@@ -844,13 +839,17 @@ int main()
 						}
 
 					}
-					else if (carte.niveaux[carte.niveau_actuel].decor[x][y] == "d") {
+					//porte
+					else if (carte.niveaux[carte.niveau_actuel].decor[x][y] == "d") 
+					{
+						//porte ouverte
 						if (carte.niveaux[carte.niveau_actuel].haveKey == true)
 						{
 							door_open.setPosition(x * CaseTaille, y * CaseTaille);
 							window.draw(door_open);
 
 						}
+						//porte fermée
 						else
 						{
 							door_close.setPosition(x * CaseTaille, y * CaseTaille);
@@ -860,7 +859,7 @@ int main()
 				}
 			}
 
-
+			//boxs
 			for (size_t i = 0; i < carte.niveaux[carte.niveau_actuel].boxx.size(); i++)
 			{
 				window.draw(carte.niveaux[carte.niveau_actuel].boxx[i]._Sprite);
@@ -871,10 +870,11 @@ int main()
 		//Pinatas
 			for (size_t i = 0; i < carte.niveaux[carte.niveau_actuel].Pinatas.size(); i++)
 			{
-				//if (carte.niveaux[carte.niveau_actuel].Pinatas[i].isMort == false && carte.niveaux[carte.niveau_actuel].Mexicans[i].isMort == false)
+				
 				window.draw(carte.niveaux[carte.niveau_actuel].Pinatas[i]._Sprite);
 				if (player_trump.invincible == false)
-				{
+				{	
+					//le joueur prend des dégâts s'il entre en collision avec les pinatas, un son est lancé
 					if (carte.niveaux[carte.niveau_actuel].Pinatas[i].isMort == false)
 					{
 						if (player_trump.satouch.getGlobalBounds().intersects(carte.niveaux[carte.niveau_actuel].Pinatas[i]._Sprite.getGlobalBounds()))
@@ -896,6 +896,7 @@ int main()
 				{
 					if (carte.niveaux[carte.niveau_actuel].Mexicans[i].isMort == false)
 					{
+						//le joueur prend des dégâts s'il entre en collision avec les mexicains, un son est lancé
 						if (player_trump.satouch.getGlobalBounds().intersects(carte.niveaux[carte.niveau_actuel].Mexicans[i]._Sprite.getGlobalBounds()))
 						{
 							player_trump.takeDamage(1);

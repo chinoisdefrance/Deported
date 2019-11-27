@@ -1,5 +1,7 @@
 #include "Player.h"
 
+//caractéristique du joueur
+
 Player::Player(sf::Texture& TEMP_Trump)
 {
 	_Sprite.setTexture(TEMP_Trump);
@@ -25,6 +27,7 @@ Player::Player(sf::Texture& TEMP_Trump)
 	ghost.setFillColor(sf::Color(255, 0, 0, 128));
 }
 
+//sprite du joueur
 
 sf::Sprite Player::getSprite() const
 {
@@ -37,6 +40,7 @@ sf::Sprite Player::getPosition()
 	return sf::Sprite();
 }
 
+// mouvements du joueur
 
 void Player::player_move(int move_x, int move_y)
 {
@@ -44,17 +48,23 @@ void Player::player_move(int move_x, int move_y)
 	move_y = 0;
 }
 
+// pour tirer
+
 void Player::shootTweet()
 {
 	tweetClock.restart();
 	tweetTime = false;
 }
 
+//changer le sprite du joueur quand il attaque
+
 void Player::spriteAttackFinish()
 {
 	_ClockReturnSprite.restart();
 	spriteReturn = false;
 }
+
+//quand le joueur prend des dégâts le sprite change et quand il n'a plus de points de vie, un écran de game over apparaît
 
 void Player::takeDamage(int damage = 1)
 {
@@ -74,6 +84,8 @@ void Player::takeDamage(int damage = 1)
 		haveTakeDamage = true;
 	}
 }
+
+//update du joueur (temps d'invicibilité)
 
 void Player::update()
 {
@@ -95,6 +107,8 @@ void Player::update()
 
 }
 
+//hitboxs du joueur
+
 void Player::inputs(int hori, int verti)
 {
 	satouch.setPosition(_Sprite.getPosition().x, _Sprite.getPosition().y);
@@ -102,13 +116,15 @@ void Player::inputs(int hori, int verti)
 }
 
 
-
+//vitesse du sprite calqué sur la vitesse du joueur
 
 void Player::move(float xx, float yy)
 {
 
 	_Sprite.move(_Speed * xx, _Speed * yy);
 }
+
+//vitesse joueur
 
 void Player::setSpeed(float _Speed)
 {
