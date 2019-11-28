@@ -288,7 +288,7 @@ int main()
 	Player player_trump(playerTexture);
 	player_trump._Sprite.setPosition(400, 450);
 	//speed = 80.f;
-	player_trump.setSpeed(.8);
+	player_trump.setSpeed(.6);
 #pragma endregion
 
 #pragma region menu
